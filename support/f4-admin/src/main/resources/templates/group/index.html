@@ -16,23 +16,9 @@
         <div class="col-xs-12 search_div">
             <div class="input-group g-fr">
                 <form id="inquire" class="form-inline ">
-                    <div class="input-group ">
-                        <select class="form-control" name="role" id="role">
-                            <option value="0">所有角色</option>
-                            <option value="1">超级管理员</option>
-                            <option value="2">管理员</option>
-                            <option value="3">高级用户</option>
-                            <option value="4">普通用户</option>
-                        </select>
-                    </div>
-                    <div class="input-group ">
-                        <input type="text" class="form-control" id="gmt_create" placeholder="注册时间">
-                        <input type="hidden" id="gmt_create_start" name="gmt_create_start">
-                        <input type="hidden" id="gmt_create_end" name="gmt_create_end">
-                    </div>
 
                     <div class="input-group ">
-                        <input type="text" class="form-control" name="username" placeholder="用户姓名">
+                        <input type="text" class="form-control" name="username" placeholder="用户组名称">
                     </div>
                     <button type="button" class="layui-btn" style="height: 30px" onclick="table_func.search()"><i
                             class="layui-icon layui-icon-search"></i></button>
@@ -66,11 +52,7 @@
     var cols = [[
         {field: 'id', title: 'id', sort: true, type: 'checkbox', fixed: 'left'}
         , {field: 'id', title: 'ID'}
-        , {field: 'username', title: '用户名'}
-        , {field: 'password', title: '密码(已加密)'}
-        , {field: 'sex', title: '性别'}
-        , {field: 'email', title: '邮箱'}
-        , {field: 'phone', title: '手机号'}
+        , {field: 'name', title: '用户组名称'}
         , {field: 'remark', title: '备注'}
         , {
             field: 'gmt_create', title: '创建时间'
@@ -90,7 +72,7 @@
         //表格初始化
         init: function () {
             //设置表格渲染的参数
-            layui_table.set_table_data('${request.contextPath}/user/query', cols, "#toolbarBox");
+            layui_table.set_table_data('${request.contextPath}/group/query', cols, "#toolbarBox");
             //进行表格渲染
             layui_table.table_render();
         },
@@ -100,15 +82,13 @@
         },
         //添加
         add: function () {
-            window.location.href = "${request.contextPath}/pages/user/add";
+            window.location.href = "${request.contextPath}/pages/group/add";
         },
         //编辑
         edit: function () {
             var id = layui_table.selectOne();
-            console.log("Dasd");
-            console.log(id);
             if (id != null) {
-                window.location.href = "${request.contextPath}/pages/user/edit?id=" + id;
+                window.location.href = "${request.contextPath}/pages/group/edit?id=" + id;
             }
         },
         //删除
@@ -116,7 +96,7 @@
             var id = layui_table.selectMany();
             if (id != null) {
                 layui_layer.confirm("确定要删除吗?",function () {
-                    $.post("${request.contextPath}/user/delete", {ids:asString(id)}, function (o) {
+                    $.post("${request.contextPath}/group/delete", {ids:asString(id)}, function (o) {
                         if (o.code == 0) {
                             layer.msg(o.message);
                             table_func.search();

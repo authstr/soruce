@@ -79,7 +79,7 @@
             if (para.password != '') {
                 para.password = $.md5(para.password);
             }
-            $.post("${request.contextPath}/user/add_or_edit", para, function (o) {
+            postJSON("${request.contextPath}/user/add_or_edit", para, function (o) {
                 if (o.code == 0) {
                     layer.msg(o.message);
                     location.href = document.referrer;

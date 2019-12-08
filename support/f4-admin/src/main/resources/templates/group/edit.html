@@ -21,37 +21,21 @@
                     <div class="form-group">
                         <label class="col-xs-2 control-label"><em class="text-red">*</em>用户名</label>
                         <div class="col-xs-10">
-                            <input type="text" class="form-control input_50b" id="username" name="username"
-                                   placeholder="用户名">
+                            <input type="text" class="form-control input_50b" id="name" name="name"
+                                   placeholder="用户组名称">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="col-xs-2 control-label"><em class="text-red">*</em>密码</label>
+                        <label class="col-xs-2 control-label">上级用户组</label>
                         <div class="col-xs-10">
-                            <input type="text" class="form-control input_50b" name="password" id="password"
-                                   placeholder="请输入密码">
+                            <input type="text" class="form-control input_50b" name="parent_id" id="parent_id"
+                                   placeholder="父用户组id">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="col-xs-2 control-label">手机号</label>
-                        <div class="col-xs-10">
-                            <input type="text" class="form-control input_50b" name="phone" id="phone"
-                                   placeholder="请输入手机号">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-xs-2 control-label">邮箱</label>
-                        <div class="col-xs-10">
-                            <input type="text" class="form-control input_50b" name="email" id="email"
-                                   placeholder="请输入邮箱">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-xs-2 control-label">备注</label>
+                        <label class="col-xs-2 control-label">说明</label>
                         <div class="col-xs-10">
                             <textarea type="text" class="form-control input_50b" style="height:120px;resize:none;"
                                       id="remark" name="remark"></textarea>
@@ -76,10 +60,7 @@
     var E = {
         save: function () {
             var para = paraArrayToLiteral($("#form1").serializeArray());
-            if (para.password != '') {
-                para.password = $.md5(para.password);
-            }
-            postJSON("${request.contextPath}/user/add_or_edit", para, function (o) {
+            postJSON("${request.contextPath}/group/add_or_edit", para, function (o) {
                 if (o.code == 0) {
                     layer.msg(o.message);
                     location.href = document.referrer;
@@ -87,15 +68,15 @@
                     layui_layer.error_alert(o.message);
                 }
             });
-
         },
         load: function () {
-            $.getJSON("${request.contextPath}/user/getById", {id: $("#id").val()}, function (o) {
+            $.getJSON("${request.contextPath}/group/getById", {id: $("#id").val()}, function (o) {
                 if (o.code == 0) {
                     $("#form1").setFormValues(o.data);
                 }
             });
         }
+
     }
     $(function () {
         var id = $("#id").val()
