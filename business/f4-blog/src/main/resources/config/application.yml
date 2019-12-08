@@ -1,0 +1,39 @@
+server:
+  port: 8012
+
+
+eureka:
+  client:
+    serviceUrl: #注册中心的注册地址
+      defaultZone: http://192.168.30.106:8000/eureka/
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: blog
+  mvc:
+    view:
+      prefix: /pages
+  devtools:
+    restart:
+      enabled: false
+      additional-paths: src/main/java
+      exclude: assets/**,pages/**
+  servlet:
+    multipart:
+      max-request-size: 100MB
+      max-file-size: 100MB
+
+mybatis-plus:
+#  typeAliasesPackage: cn.stylefeng.guns.modular.system.model
+  mapper-locations: classpath:com/f4blog/**/mapping/*.xml
+
+
+
+
+
+
+
+
+

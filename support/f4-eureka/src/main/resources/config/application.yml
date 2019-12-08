@@ -1,0 +1,51 @@
+server:
+  port: 8000
+
+
+
+eureka:
+  instance:
+    hostname: 192.168.30.106 #服务注册中心IP地址
+  client:
+    registerWithEureka: false #是否向服务注册中心注册自己
+    fetchRegistry: false #是否检索服务
+    serviceUrl: #服务注册中心的配置内容，指定服务注册中心的位置
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: eureka
+#  mvc:
+#    view:
+#      prefix: /templates
+#      suffix: .html
+#  freemarker:
+#    suffix: .html
+#    template-loader-path: classpath:/templates
+#    charset: UTF-8
+#    allow-request-override: false
+#    cache: false
+#    check-template-location: true
+#    content-type: text/html
+#    expose-request-attributes: false
+#    expose-session-attributes: false
+#    expose-spring-macro-helpers: false
+#    request-context-attribute: request
+#  servlet:
+#    multipart:
+#      max-request-size: 100MB
+#      max-file-size: 100MB
+#mybatis-plus:
+#  typeAliasesPackage: com.f4blog.base.model
+#  mapper-locations: classpath*:com/f4blog/**/mapping/*.xml
+
+
+
+
+
+
+
+
+

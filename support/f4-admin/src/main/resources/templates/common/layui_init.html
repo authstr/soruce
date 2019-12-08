@@ -1,0 +1,264 @@
+<script>
+    //layui相关功能封装,
+    /*
+    layui相关功能封装
+    @authstr
+    * */
+
+    /*
+    * 参考示例:
+	* https://www.layui.com/doc/modules/table.html
+	* 封装了layui_table的一些常用功能
+    * */
+    var layui_table = {
+        //表格原始属性的值, 如<table id="table_div" lay-filter="main" ></table> 中的mian
+        lay_attr: null,
+        //表格渲染结束后的表格对象
+        tableins: null,
+        //用于创建表格的参数
+        table_para: {
+            elem: '#table_div'
+            //容器唯一 id.id 是对表格的数据操作方法上是必要的传递条件
+            , id: "table_id"
+            , height: 600
+            //数据接口
+            // ,url: '${request.contextPath}/user/query'
+            //接口http请求类型
+            , method: 'get'
+            //默认每页数据条数
+            , limit: 20
+            //开启分页
+            , page: true
+            //开启表格头部工具栏区域
+            // ,toolbar:"#toolbarDemo"
+            //默认工具
+            , defaultToolbar: ['filter', 'exports', 'print']
+            //其他请求参数
+            , where: {}
+            //定义请求时相关分页参数
+            , request: {
+                //页码的参数名称,默认：page
+                pageName: 'current'
+                //每页数据量的参数名,默认：limit
+                , limitName: 'size'
+            }
+            //对分页返回数据进行转换
+            , parseData: function (res) {
+                return {
+                    //解析接口状态
+                    "code": res.code,
+                    //解析提示文本
+                    "msg": res.msg,
+                    //解析数据长度
+                    "count": res.data.total,
+                    //解析数据列表
+                    "data": res.data.records
+                };
+            }
+            // ,cols: [[ //表头
+            //     {field: 'id', title: 'id', sort: true,type:'checkbox', fixed: 'left'}
+            //     ,{field: 'id', title: 'ID'}
+            //     ,{field: 'username', title: '用户名'}
+            //     ,{field: 'password', title: '密码'}
+            //     ,{field: 'sex', title: '性别'}
+            //     ,{field: 'email', title: '邮箱'}
+            //     ,{field: 'phone', title: '手机号'}
+            //     ,{field: 'remark', title: '备注'}
+            // ]]
+        },
+        //设置表格渲染的核心参数 url和表头信息,表格头部工具栏区域(script的id)
+        set_table_data: function (url, cols, toolbar) {
+            layui_table.table_para.toolbar = toolbar;
+            layui_table.table_para.url = url;
+            layui_table.table_para.cols = cols
+        },
+        //设置表格渲染的核心参数 url,限制条件,表头信息,表格头部工具栏区域(script的id)
+        set_table_data_where: function (url,where, cols, toolbar) {
+            layui_table.table_para.toolbar = toolbar;
+            layui_table.table_para.where=where;
+            layui_table.table_para.url = url;
+            layui_table.table_para.cols = cols
+        },
+        //表格渲染
+        table_render: function () {
+            layui_table.tableins = layui.table.render(layui_table.table_para);
+        },
+
+        //表格搜索 参数:搜索参数
+        search: function (search_para) {
+            var search_para = {
+                where: search_para,
+                page: {
+                    curr: 1
+                }
+            }
+            layui.table.reload(layui_table.table_para.id, search_para)
+        },
+
+        //设置点击表格行,进行选中
+        click_line_checked: function () {
+            //https://fly.layui.com/jie/31942/
+            $(document).on("click", ".layui-table-body table.layui-table tbody tr", function () {
+                var index = $(this).attr('data-index');
+                var tableBox = $(this).parents('.layui-table-box');
+                if (tableBox.find(".layui-table-fixed.layui-table-fixed-l").length > 0) {
+                    tableDiv = tableBox.find(".layui-table-fixed.layui-table-fixed-l")
+                } else {
+                    tableDiv = tableBox.find(".layui-table-body.layui-table-main")
+                }
+                // 加上下面的,限定只能选中一行数据
+                // var trs = tableDiv.find(".layui-unselect.layui-form-checkbox.layui-form-checked").parent().parent().parent();
+                // for (var i = 0; i < trs.length; i++) {
+                //     var ind = $(trs[i]).attr("data-index");
+                //     if (ind != index) {
+                //         var checkCell = tableDiv.find("tr[data-index=" + ind + "]").find("td div.laytable-cell-checkbox div.layui-form-checkbox I");
+                //         if (checkCell.length > 0) {
+                //             checkCell.click()
+                //         }
+                //     }
+                // }
+                var checkCell = tableDiv.find("tr[data-index=" + index + "]").find("td div.laytable-cell-checkbox div.layui-form-checkbox I");
+                if (checkCell.length > 0) {
+                    checkCell.click()
+                }
+            });
+            $(document).on("click", "td div.laytable-cell-checkbox div.layui-form-checkbox", function (e) {
+                e.stopPropagation()
+            });
+        },
+
+        //获取当前选中行的数据
+        get_checked_data: function () {
+            //获取选中行对象
+            var checkStatus = layui.table.checkStatus(layui_table.table_para.id);
+            //获取数据
+            return checkStatus.data;
+        },
+
+        //要求选中一条数据,且返回id
+        selectOne: function () {
+            var table_data = layui_table.get_checked_data();
+            if (table_data == null) {
+                layer.msg("无法获取选中数据", {icon: 2});
+                return null;
+            }
+            if (table_data.length != 1) {
+                if (table_data.length == 0) {
+                    layer.msg("至少要选中一条数据", {icon: 2});
+                } else {
+                    layer.msg("只能选择一条数据", {icon: 2});
+                }
+                return null;
+            }
+            var one_id = paraGetOneId(table_data);
+            if (one_id == null) {
+                layer.msg("无法获取选中行id", {icon: 2});
+                return null;
+            }
+            return one_id;
+        },
+
+        //要求选中多条数据,且返回id
+        selectMany: function () {
+            var table_data = layui_table.get_checked_data();
+            if (table_data == null) {
+                layer.msg("无法获取选中数据", {icon: 2});
+            }
+            if (table_data.length < 1) {
+                layer.msg("至少要选中一条数据", {icon: 2});
+            }
+            var many_id = paraGetId(table_data);
+            if (many_id == null) {
+                layer.msg("无法获取选中行id", {icon: 2});
+            }
+            return many_id;
+        },
+        //在表头,以指定格式进行时间转换
+        date_format: function (date, format) {
+            if (!isEmpty(date)) {
+                return new Date(date).format("yyyy-MM-dd hh:mm:ss")
+            }
+            return "";
+        }
+
+
+    }
+
+
+    /*
+    * 参考示例:
+    *  https://www.layui.com/doc/modules/laydate.html
+    * 封装了layui 日期控件的一些常用功能
+    * */
+    var layui_date = {
+        //创建日期控件的常用参数
+        data_para: {
+            //工具按钮,分别是"清除","现在","确认"
+            btns: ['clear', 'now', 'confirm']
+            //指定元素
+            // elem: '#startDate'
+            //指定类类型 year	年选择器 month年月选择器	date日期选择器	time时间选择器	datetime日期时间选择器
+            , type: 'date'
+            //是否显示公历节日
+            , calendar: true
+        },
+
+        //通过一个字面量数组,创建日期控件
+        render: function (para) {
+            return layui.laydate.render(para);
+        },
+        //通过控件元素(id)和日期类型,创建日期控件
+        date_render: function (elem, type) {
+            //复制日期控件的参数,防止生成多个日期控件,共用一个参数对象
+            var copy_para = JSON.parse(JSON.stringify(layui_date.data_para))
+            copy_para.elem = elem;
+            copy_para.type = type;
+            return layui_date.render(copy_para);
+        },
+        //通过控件键元素(id)和日期类型,开始时间回传元素,结束时间回传元素,创建一个日期范围选择器
+        range_date_render: function (elem, type, start_elem, end_elem) {
+            var copy_para = JSON.parse(JSON.stringify(layui_date.data_para))
+            copy_para.elem = elem;
+            copy_para.type = type;
+            //设置启用日期范围,间隔符为"~"
+            copy_para.range = "至";
+            //设置选择日期后的回调函数
+            copy_para.done = function (value, date, endDate) {
+                if (!isEmpty(value)) {
+                    //获取开始时间和结束时间的字符串
+                    var two_date = value.split(copy_para.range);
+                    //将开始时间和结束时间设置到指定的元素上
+                    $(start_elem).val(two_date[0].trim());
+                    $(end_elem).val(two_date[1].trim());
+                }else{
+                    $(start_elem).val("");
+                    $(end_elem).val("");
+                }
+
+            }
+            return layui_date.render(copy_para);
+        }
+    }
+
+    /*
+    * 封装了 layer 的一些常用弹窗
+    * */
+    var layui_layer = {
+        //进行错误提示
+        error_alert: function (msg) {
+            layer.alert(msg, {
+                skin: 'layui-layer-molv' //样式类名
+                , closeBtn: 0
+                , title: "错误提示"
+            });
+        },
+        //弹出提示框 message提示的消息   func点确定要执行的操作
+        confirm: function (message,func) {
+             layer.confirm(message, {
+                btn: ['确定','取消'] //按钮
+            },func, function(){});
+        },
+
+    }
+
+</script>

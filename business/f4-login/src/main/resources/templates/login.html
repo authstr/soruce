@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>f4blog</title>
+<!-- For-Mobile-Apps -->
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="" />
+	<script type="text/javascript" src="${request.contextPath}/skins/js/jquery.min.js"></script>
+ 	<link rel="stylesheet" href="${request.contextPath}/skins/css/login_style.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="${request.contextPath}/skins/layui/css/layui.css" />
+	<script type="text/javascript" src="${request.contextPath}/skins/layui/layui.all.js"></script>
+	<!-- 自己写的常用js -->
+	<script type="text/javascript" src="${request.contextPath}/skins/js/common.js"></script>
+	<!-- 自己写的常用css -->
+	<link rel="stylesheet" href="${request.contextPath}/skins/css/my_common.css">
+	<!--md5加密-->
+	<script type="text/javascript" src="${request.contextPath}/skins/js/jquery.md5.js"></script>
+</head>
+<body>
+<div class="container" style="display: none">
+<h1>f4blog</h1>
+	<div class="signin">
+     	<form>
+	      	<input type="text" class="user" value="" placeholder="用户名"/>
+	      	<input type="password" class="pass" value="" placeholder="密码"/>
+	      	<label>
+		  		<input type="checkbox" value="Remember-Me" /> Remember Me?
+		  	</label>
+          	<input type="submit" value="LOGIN" />
+	 	</form>
+	</div>
+</div>
+
+<div class="container">
+	<h1>f4blog</h1>
+	<div class="signin">
+		<div class="title_info" style="margin-top: 0px;margin-bottom: 20px;color: white" >注册</div>
+		<form id="register">
+			<input type="text" class="inp user" name="username" id="username" value="" placeholder="用户名"/>
+			<input type="password" class="inp pass" id="pwd" name="password" value="" placeholder="密码"/>
+			<input type="password" class="inp pass" id="affirmPwd" value="" placeholder="确认密码"/>
+			<input type="text" class="inp email" id="email" name="email" value="" placeholder="邮箱"/>
+			<input type="submit"  value="注册" />
+		</form>
+	</div>
+</div>
+<div class="footer">
+     <p>Copyright &copy; 2019 233333333333333333  <a href="http://f4blog.cn">f4blog.cn</a></p>
+</div>
+<script>
+	var func = {
+		register: function () {
+			var para = paraArrayToLiteral($("#register").serializeArray());
+			if (para.password != '') {
+				para.password = $.md5(para.password);
+			}
+			$.post("${request.contextPath}/register", para, function (o) {
+				if (o.code == 0) {
+					layer.msg(o.message);
+					location.href = document.referrer;
+				} else {
+					layer.alert(o.message, {
+						skin: 'layui-layer-molv' //样式类名
+						, closeBtn: 0
+						, title: "错误提示"
+					});
+				}
+			});
+		},
+		load: function () {
+			$.getJSON("${request.contextPath}/user/getById", {id: $("#id").val()}, function (o) {
+				if (o.code == 0) {
+					$("#form1").setFormValues(o.data);
+				}
+			});
+		}
+	}
+	$(function () {
+		$("#register").submit(function(e){
+			//阻止form表单默认提交
+			event.preventDefault()
+			if($("#username").val()==""){
+				layer.msg('请输入用户名!');
+				return false;
+			}
+			if($("#pwd").val()==""){
+				layer.msg('请输入密码!');
+				return false;
+			}
+			if($("#affirmPwd").val()==""){
+				layer.msg('请确认密码!');
+				return false;
+			}
+			if($("#pwd").val()!=$("#affirmPwd").val()){
+				layer.msg('两次密码输入不一致!');
+				return false;
+			}
+			if($("#email").val()==""){
+				layer.msg('请输入邮箱!');
+				return false;
+			}
+			func.register();
+			return false;
+		});
+	});
+	addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); }
+</script>
+
+</body>
+</html>

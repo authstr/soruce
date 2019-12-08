@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta http-equiv="content-type" content="text/html;charset=utf-8">
+	<meta content="always" name="referrer">
+	<#include "../common/header.html">
+
+</head>
+<body>
+<!--最外面的灰底框,用于与ifram区别开-->
+<div class="col-xs-12 lightgray_div" >
+	<!--白底框-->
+	<div class="col-xs-12 white_div">
+		<!--返回按钮-->
+		<h4 class="back_div"> <a href="javascript:history.back()" s tyle="font-size: 16px; color: black; " >< 返回</a></h4>
+		<div class="row all_input_div" style="margin-top: 8px">
+			<div class="col-xs-6">
+				<form class="form-horizontal" role="form" id="form1">
+					<input type="hidden" name="id" id="id" value="${id!?html}"/>
+
+					<div class="form-group">
+						<label class="col-xs-2 control-label"><em class="text-red">*</em>字典名称</label>
+						<div class="col-xs-10">
+							<input type="text" class="form-control input_50b"  name="name" id="name"
+								   placeholder="请输入字典类型名称,如:性别">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-2 control-label"><em class="text-red">*</em>字典编码</label>
+						<div class="col-xs-10">
+							<input type="text" class="form-control input_50b"   id="code" name="code"
+								   placeholder="请输入字典类型编码,如:SEX">
+						</div>
+					</div>
+
+					<div class="form-group J_radioBox">
+						<label class="col-xs-2 control-label"><em class="text-red">*</em>字典类型</label>
+						<div class="col-xs-10" style="padding-top: 5px">
+							<label>
+								<input type="radio"   name="type" value="0" title="普通字典" >
+								<span>普通字典</span>
+							</label>
+							<label>
+								<input type="radio"  name="type" value="1" title="系统字典">
+								<span>系统字典</span>
+							</label>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-xs-2 control-label">所属系统</label>
+						<div class="col-xs-10">
+							<input type="text" class="form-control input_50b"  name="system_name" id="system_name"
+								   placeholder="请输入所属系统">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-xs-2 control-label">描述</label>
+						<div class="col-xs-10">
+							<textarea type="text" class="form-control input_50b" style="height:120px;resize:none;" id="describe_info" name="describe_info" placeholder="说明这个字典类型的作用"></textarea>
+						</div>
+					</div>
+
+				</form>
+				<div  class="form-group ">
+					<label class="col-xs-2 control-label"></label>
+					<a class="gbn gbn-m" href="javascript:" onclick="E.save();" >保存</a>
+					<a class="gbn gbn-m gbn-red" href="javascript:" onclick="history.back();" >返回</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+</body>
+<#include "../common/layui_init.html">
+<script type="text/javascript">
+	var E={
+		save:function(){
+			var para=paraArrayToLiteral($("#form1").serializeArray());
+			$.post("${request.contextPath}/dict_type/add_or_edit",para,function(o){
+				if(o.code==0){
+					layer.msg(o.message);
+					location.href=document.referrer;
+				}else{
+					layui_layer.error_alert(o.message);
+				}
+			});
+		},
+		load:function(){
+			$.getJSON("${request.contextPath}/dict_type/getById",{id:$("#id").val()},function(o){
+				if(o.code ==0){
+					$("#form1").setFormValues(o.data);
+				}
+			});
+		}
+	}
+	$(function(){
+		var id=$("#id").val()
+		if(id!=null&&id!=""){
+			E.load();
+		}
+	});
+</script>
+<#include "../common/footer-inner.html">
+</html>
