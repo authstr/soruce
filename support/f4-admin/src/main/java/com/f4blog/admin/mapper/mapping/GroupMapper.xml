@@ -12,6 +12,13 @@
         </if>
     </select>
 
+    <select id="getAll" resultType="map">
+        SELECT a.* FROM base_group a where 1=1
+        <if test="name != null and name != ''">
+            and a.name like CONCAT('%',#{name},'%')
+        </if>
+    </select>
+
 </mapper>
 
 

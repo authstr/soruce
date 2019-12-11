@@ -18,7 +18,7 @@
                 <form id="inquire" class="form-inline ">
 
                     <div class="input-group ">
-                        <input type="text" class="form-control" name="username" placeholder="用户组名称">
+                        <input type="text" class="form-control" id="name" name="name" placeholder="用户组名称">
                     </div>
                     <button type="button" class="layui-btn" style="height: 30px" onclick="table_func.search()"><i
                             class="layui-icon layui-icon-search"></i></button>
@@ -27,6 +27,39 @@
         </div>
         <div class="col-xs-12">
             <div>
+                <div class="layui-table-tool" style="margin-bottom: -11px;margin-top: 10px">
+                    <div class="layui-table-tool-temp">
+                        <div style="margin-bottom: -5px">
+                            <div class="layui-btn-container " style="float: left;">
+                                <button class="layui-btn " onclick="table_func.add()">
+                                    <i class="layui-icon layui-icon-add-1"></i>
+                                    添加
+                                </button>
+                                <button class="layui-btn layui-btn-normal" onclick="table_func.edit()">
+                                    <i class="layui-icon layui-icon-edit"></i>
+                                    编辑
+                                </button>
+                                <button class="layui-btn layui-btn-danger" onclick="table_func.delete()">
+                                    <i class="layui-icon layui-icon-delete"></i>
+                                    删除
+                                </button>
+                                <button class="layui-btn layui-btn-danger" onclick="table_func.delete_relevance()">
+                                    <i class="layui-icon layui-icon-delete"></i>
+                                    删除(包括下级)
+                                </button>
+                            </div>
+                            <div class="layui-table-tool-self">
+                                <div class="layui-inline" title="展开所有" lay-event="LAYTABLE_COLS" onclick="table_func.expandAll()" >
+                                    <i class="layui-icon layui-icon-triangle-d"></i>
+                                </div>
+                                <div class="layui-inline" title="折叠所有" lay-event="LAYTABLE_EXPORT" onclick="table_func.foldAll()"  id="">
+                                    <i class="layui-icon layui-icon-template-1"></i>
+                                </div>
+                                <!--<div class="layui-inline" title= lay-event="LAYTABLE_PRINT"><i class="layui-icon layui-icon-print"></i></div>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <table id="table_div" lay-filter="main"></table>
             </div>
         </div>
@@ -48,10 +81,9 @@
     </div>
 </script>
 <script type="text/javascript">
-    //表头
-    var cols = [[
-        {field: 'id', title: 'id', sort: true, type: 'checkbox', fixed: 'left'}
-        , {field: 'id', title: 'ID'}
+    //树状表格 表头
+    var cols = [
+        {type: 'radio'}
         , {field: 'name', title: '用户组名称'}
         , {field: 'remark', title: '备注'}
         , {
@@ -66,19 +98,43 @@
                 return layui_table.date_format(col.gmt_modified, "yyyy-MM-dd hh:mm:ss")
             }
         }
-    ]]
+    ]
     //页面要用的方法
     table_func = {
+        //树状表格对象
+        tableTree_obj:null,
         //表格初始化
         init: function () {
-            //设置表格渲染的参数
-            layui_table.set_table_data('${request.contextPath}/group/query', cols, "#toolbarBox");
-            //进行表格渲染
-            layui_table.table_render();
+            var para = paraArrayToLiteral($("#inquire").serializeArray());
+            $.getJSON("${request.contextPath}/group/getAll", para,function (o) {
+                if (o.code == 0) {
+                    // 渲染表格
+                    tableTree_obj =  layui.treeTable.render({
+                        elem: '#table_div'
+                        , id: "tableTree_id"
+                        ,data: o.data  // 数据
+                        ,tree: {
+                            isPidData:true,
+                            iconIndex: 1 // 折叠图标显示在第几列
+                            ,idName:"id"
+                            , pidName:'parent_id'
+                            ,openName:'name'
+                        },
+                        cols: cols
+                    });
+                    layui.treeTable.on('checkbox(table_div)', function(obj){
+                        console.log(obj.checked);  // 当前是否选中状态
+                        console.log(obj.data);  // 选中行的相关数据
+                        console.log(obj.type);  // 如果触发的是全选，则为：all，如果触发的是单选，则为：one
+
+                    });
+
+                }
+            });
         },
         //搜索
         search: function () {
-            layui_table.search(paraArrayToLiteral($("#inquire").serializeArray()))
+            tableTree_obj.filterData($("#name").val());
         },
         //添加
         add: function () {
@@ -86,37 +142,62 @@
         },
         //编辑
         edit: function () {
-            var id = layui_table.selectOne();
+           // 获取选中数据
+            var id =  tableTree_obj.checkStatus()[0].id;
             if (id != null) {
                 window.location.href = "${request.contextPath}/pages/group/edit?id=" + id;
             }
         },
+        // 展开全部
+        expandAll:function(){
+            tableTree_obj.expandAll();
+        },
+        //  折叠全部
+        foldAll:function(){
+            tableTree_obj.foldAll();
+        },
         //删除
         delete: function () {
-            var id = layui_table.selectMany();
+            var id = tableTree_obj.checkStatus()[0].id;
             if (id != null) {
-                layui_layer.confirm("确定要删除吗?",function () {
-                    $.post("${request.contextPath}/group/delete", {ids:asString(id)}, function (o) {
+                layui_layer.confirm("确定要删除当前用户组吗?该用户组之下的用户组不会被删除",function () {
+                    $.post("${request.contextPath}/group/delete", {ids:id}, function (o) {
                         if (o.code == 0) {
                             layer.msg(o.message);
-                            table_func.search();
+                            table_func.init();
                         } else {
                             layui_layer.error_alert(o.message);
                         }
                     });
                 })
             }
-
+        },
+        //删除关联
+        delete_relevance: function () {
+            var id = tableTree_obj.checkStatus()[0].id;
+            if (id != null) {
+                layui_layer.confirm("确定要删除当前用户组和当前用户组下的所有子用户组吗?",function () {
+                    $.post("${request.contextPath}/group/delete", {ids:id}, function (o) {
+                        if (o.code == 0) {
+                            layer.msg(o.message);
+                            table_func.init();
+                        } else {
+                            layui_layer.error_alert(o.message);
+                        }
+                    });
+                })
+            }
         }
     }
     $(function () {
         //设置表格的属性值
-        layui_table.lay_attr = $("#table_div").attr("lay-filter");
+        // layui_table.lay_attr = $("#table_div").attr("lay-filter");
         //设置点击表格行,进行选中
-        layui_table.click_line_checked();
+        // layui_table.click_line_checked();
+
         //渲染日期选择框
-        layui_date.range_date_render("#gmt_create", "date", "#gmt_create_start", "#gmt_create_end");
-        $("#role").select2();
+        // layui_date.range_date_render("#gmt_create", "date", "#gmt_create_start", "#gmt_create_end");
+        // $("#role").select2();
         table_func.init();
     });
 </script>

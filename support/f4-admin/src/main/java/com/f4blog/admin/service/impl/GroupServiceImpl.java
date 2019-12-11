@@ -19,6 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Map;
+
 
 @Service
 public class GroupServiceImpl extends BaseServiceImpl<GroupDao, BaseGroup> implements GroupService {
@@ -30,6 +33,11 @@ public class GroupServiceImpl extends BaseServiceImpl<GroupDao, BaseGroup> imple
     public Page query(@Param("page") Page page, String name) {
         return groupDao.query(page, name);
     }
+
+    @Override
+    public List<Map> getAll(RequestPara para){
+        return groupDao.getAll(para.get("name"));
+    };
 
     /**
      * 添加或编辑

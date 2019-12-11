@@ -47,6 +47,15 @@ public class GroupController extends AbstractController {
         return ResponseData.success();
     }
 
+    @ApiOperation(value="获取所有", notes="",httpMethod="post")
+    @RequestMapping("getAll")
+    public ResponseData getAll(HttpServletRequest request) {
+        RequestPara para= new RequestPara(request);
+        return ResponseData.success(groupService.getAll(para));
+    }
+
+
+
     @RequestMapping("getById")
     public ResponseData getById( Integer id) {
         BaseGroup a= groupService.getById(id);

@@ -8,6 +8,11 @@ import com.f4blog.model.base.BaseDict;
 import com.f4blog.model.base.BaseGroup;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+import java.util.Map;
+
 public interface GroupDao extends BaseMapper<BaseGroup> {
     Page query(@Param("page") Page page, String name);
+
+    List<Map> getAll(String name);
 }

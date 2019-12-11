@@ -39,6 +39,8 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     #关闭驼峰命名转换
     map-underscore-to-camel-case: false
+    #在返回map时,如果为字段值为null,是否有对应的键
+    call-setters-on-nulls: true
 
 
 
