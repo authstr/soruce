@@ -17,6 +17,17 @@
         <if test="name != null and name != ''">
             and a.name like CONCAT('%',#{name},'%')
         </if>
+        <if test="exclude_id != null and exclude_id != ''">
+            and !( a.parent_ids LIKE CONCAT('%$[',#{exclude_id},'$]%') escape '$')
+            and a.id != #{exclude_id}
+        </if>
+    </select>
+
+    <select id="getLikeParentIds" resultType="com.f4blog.model.base.BaseGroup">
+        SELECT a.* FROM base_group a where 1=1
+        <if test="id != null and id != ''">
+            and parent_ids LIKE CONCAT('%$[',#{id},'$]%') escape '$'
+        </if>
     </select>
 
 </mapper>

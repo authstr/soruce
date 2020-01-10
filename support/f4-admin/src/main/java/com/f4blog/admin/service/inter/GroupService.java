@@ -25,4 +25,6 @@ public interface GroupService extends IService<BaseGroup> {
     @Transactional(rollbackFor=Exception.class)
     void delete(Integer[] ids);
 
+    @Transactional(rollbackFor=Exception.class)
+    void deleteChildren(Integer[] ids);
 }

@@ -41,11 +41,20 @@ public class GroupController extends AbstractController {
         return ResponseData.success();
     }
 
+    @ApiOperation(value="删除用户组(不包括子用户组)", notes="",httpMethod="post")
     @RequestMapping("delete")
     public ResponseData delete(Integer[] ids) {
         groupService.delete(ids);
         return ResponseData.success();
     }
+
+    @ApiOperation(value="删除用户组(包括子用户组)", notes="",httpMethod="post")
+    @RequestMapping("delete_chilren")
+    public ResponseData delete_chilren(Integer[] ids) {
+        groupService.delete(ids);
+        return ResponseData.success();
+    }
+
 
     @ApiOperation(value="获取所有", notes="",httpMethod="post")
     @RequestMapping("getAll")

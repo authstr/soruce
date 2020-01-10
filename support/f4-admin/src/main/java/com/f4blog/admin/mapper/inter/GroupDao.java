@@ -14,5 +14,7 @@ import java.util.Map;
 public interface GroupDao extends BaseMapper<BaseGroup> {
     Page query(@Param("page") Page page, String name);
 
-    List<Map> getAll(String name);
+    List<Map> getAll(String name,String exclude_id);
+
+    List<BaseGroup> getLikeParentIds(Integer id);
 }

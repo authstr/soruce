@@ -29,8 +29,9 @@
                     <div class="form-group">
                         <label class="col-xs-2 control-label">上级用户组</label>
                         <div class="col-xs-10">
-                            <input type="text" class="form-control input_50b" name="parent_id" id="parent_id"
-                                   placeholder="父用户组id">
+                            <select class="form-control input_50b" name="parent_id" id="parent_id">
+                                <option value="">请选择</option>
+                            </select>
                         </div>
                     </div>
 
@@ -76,13 +77,44 @@
                     $("#form1").setFormValues(o.data);
                 }
             });
+        },
+        load_group:function(label_id,placeholder){
+            var sele="#"+label_id;
+            //清空下拉框
+            // $(sele).empty();
+            $.getJSON("${request.contextPath}/group/getAll",{},function(o){
+                var data=o.data;
+                var count=o.data.length;
+                if(o.code ==0 &&data!=null&&count!=0){
+                    var tmp = [];//用来存储select2内容
+                    $(data).each(function(index, elem){
+                        tmp.push({
+                            text: elem.name,//下拉框内容
+                            id: elem.id //下拉框id
+                        });
+                    });
+                    $(sele).select2({
+                        language: 'zh-CN',
+                        placeholder:placeholder,
+                        data:tmp,
+                    });
+                }else{
+                    $(sele).select2({
+                        language: 'zh-CN',
+                        placeholder:"没有查询到数据",
+                        data:null,
+                    });
+                }
+            });
         }
+
     }
     $(function () {
         var id = $("#id").val()
         if (id != null && id != "") {
             E.load();
         }
+        E.load_group("parent_id","请选择上级用户组")
     });
 </script>
 <#include "../common/footer-inner.html">

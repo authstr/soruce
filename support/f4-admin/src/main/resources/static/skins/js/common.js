@@ -141,7 +141,10 @@ function rodio_chick(lab) {
             /**该功能是为jquery版的 combox提供**/
             var this_obj = form1.find("[name='" + id + "']");
             var this_obj_type = this_obj.attr("type");
-
+            var  tagName=null;
+            if(this_obj.length!=0){
+                tagName =this_obj[0].tagName;
+            }
             if (undefined == this_obj_type || this_obj_type == "" || "text" == this_obj_type) {
                 this_obj.val(value);
             } else if (this_obj_type == "radio" || "checkbox" == this_obj_type) {
@@ -155,8 +158,6 @@ function rodio_chick(lab) {
                     });
                 } else {
                     this_obj.each(function () {
-                        console.log($(this));
-                        console.log($(this).val() + "          " + value);
                         if ($(this).val() == value) {
                             $(this).prop({'checked': true});
                         } else {
@@ -164,9 +165,12 @@ function rodio_chick(lab) {
                         }
                     });
                 }
-
             } else {
                 this_obj.val(value);
+            }
+            //进行select的赋值
+            if( tagName == "SELECT"){
+                this_obj.val(value).trigger('change');;
             }
         });
     };
