@@ -23,4 +23,20 @@ public class AdminC {
      * 字典类型 系统
      */
     final public static Integer DICT_TYPE_SYSTEM=1;
+
+
+    /**
+     * 菜单类型 系统
+     */
+    final public static Integer MENU_TYPE_SYSTEM=1;
+
+    /**
+     * 菜单类型  菜单
+     */
+    final public static Integer MENU_TYPE_MENU=2;
+
+    /**
+     * 菜单类型 按钮
+     */
+    final public static Integer MENU_TYPE_BUTTON=3;
 }
