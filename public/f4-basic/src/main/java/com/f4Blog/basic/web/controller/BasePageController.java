@@ -79,5 +79,20 @@ public class BasePageController extends AbstractController {
         model.setViewName(getSystemSkin() + "/" + pkg + "/" + page);
         return model;
     }
+    /***
+     * 共用的页面跳转,支持参数的自动添加
+     * @param model
+     * @param pkg
+     * @param page
+     * @param request
+     * @return
+     */
+    @RequestMapping("pages/{pkg}/{pkg2}/{page}")
+    public ModelAndView page_view(ModelAndView model,@PathVariable("pkg") String pkg,@PathVariable("pkg2") String pkg2, @PathVariable("page") String page,HttpServletRequest request) {
+        setModelAndViewPara(model,request);
+        setCommonPara(model);
+        model.setViewName(getSystemSkin() + "/" + pkg + "/" +pkg2+"/"+ page);
+        return model;
+    }
 
 }
