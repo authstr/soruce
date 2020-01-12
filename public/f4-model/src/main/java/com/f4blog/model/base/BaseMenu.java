@@ -43,6 +43,9 @@ public class BaseMenu extends BaseModel {
 	//该菜单的层级,一般与父菜单的数量一致
 	private Integer level;
 
+	//菜单的状态 -1禁用 0有效
+	private  Integer status;
+
 	//菜单说明
 	private  String remark;
 

@@ -17,6 +17,30 @@ Date.prototype.format = function (format) {
     return format;
 };
 
+
+var common_utils={
+    status_map:{
+        "-1":["禁用","brown"],
+        "0":["启用","forestgreen"]
+    },
+    transform_map:function (key,map) {
+        var res=map[key];
+        return res!=null?res:"";
+    },
+    transform_map_color:function (key,map) {
+        var value=map[key];
+        if(value==null){
+            return "";
+        }
+        var html="<span style='color:"+value[1]+"'>"+value[0]+"</span>"
+        return html;
+    },
+    status_transform:function (key) {
+        return common_utils.transform_map_color(key,common_utils.status_map)
+    }
+
+}
+
 //form的封装参数数组转为参数字面量
 function paraArrayToLiteral(para) {
     var literal = {};
@@ -123,7 +147,6 @@ function isEmpty(str) {
 
 
 function rodio_chick(lab) {
-    console.log($(lab));
     $(lab).addClass("on");
 }
 

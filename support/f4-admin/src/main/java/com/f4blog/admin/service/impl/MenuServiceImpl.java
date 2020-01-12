@@ -10,6 +10,7 @@ import com.f4Blog.basic.web.service.BaseServiceImpl;
 import com.f4blog.admin.mapper.inter.MenuDao;
 import com.f4blog.admin.service.inter.MenuService;
 import com.f4blog.model.base.BaseMenu;
+import com.f4blog.model.constant.BaseC;
 import com.f4blog.model.utils.ModelUtil;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +45,12 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuDao, BaseMenu> implemen
     @Override
     public void addOrEdit(BaseMenu model, RequestPara para) {
         Assert.isTrue(super.isUnique(model,"name"),"菜单名称不能重复");
+        if(model.getStatus()==null){
+            model.setStatus(BaseC.COMMON_STATUS_NORMAL);
+        }
 
         BaseMenu oldModel=super.getById(model.getId());
+
 
         //设置 parent_ids属性值和 level属性值
         setParentIds(model);

@@ -82,19 +82,38 @@
 </script>
 <script type="text/javascript">
     //树状表格 表头
+    var type_map={
+        "1":"系统",
+        "2":"菜单",
+        "3":"按钮"
+    }
+
     var cols = [
         {type: 'radio'}
         , {field: 'name', title: '菜单名称'}
+        , {field: 'orderno', title: '排序号'}
         // , {field: 'parent_ids', title: '父级'}
+        , {
+            field: 'type', title: '菜单类型'
+            , templet: function (col) {
+                return common_utils.transform_map(col.type,type_map)
+            }
+        }
         , {field: 'level', title: '层级'}
         , {field: 'remark', title: '备注'}
+        , {
+            field: 'status', title: '菜单状态'
+            , templet: function (col) {
+                return common_utils.status_transform(col.status)
+            }
+        }
         , {
             field: 'gmt_create', title: '创建时间'
             , templet: function (col) {
                 return layui_table.date_format(col.gmt_create, "yyyy-MM-dd hh:mm:ss")
             }
-        },
-        {
+        }
+        ,{
             field: 'gmt_create', title: '修改时间'
             , templet: function (col) {
                 return layui_table.date_format(col.gmt_modified, "yyyy-MM-dd hh:mm:ss")
