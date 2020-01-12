@@ -41,3 +41,11 @@
     cursor: pointer;
     color: #01AAED;
 }
+
+.form-radio-div{
+    margin-top: 5px;
+}
+
+.form-radio-label{
+    margin-right: 10px;
+}

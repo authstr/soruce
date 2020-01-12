@@ -166,7 +166,7 @@ public class GroupServiceImpl extends BaseServiceImpl<GroupDao, BaseGroup> imple
 
     /**
      * 在删除后,删除子用户组
-     * @param byDelete 被删除的优化组
+     * @param byDelete 被删除的用户组
      */
     public void deleteAllChild(BaseGroup byDelete){
         List<BaseGroup> groups=groupDao.getLikeParentIds(byDelete.getId());

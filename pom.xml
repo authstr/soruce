@@ -76,6 +76,14 @@
             <!-- 这个需要为 true 热部署才有效 -->
             <optional>true</optional>
         </dependency>
+
+        <!-- 工具类集合 -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.0.7</version>
+        </dependency>
+
     </dependencies>
 
 

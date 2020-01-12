@@ -4,9 +4,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.f4Blog.basic.reqres.request.RequestPara;
 import com.f4Blog.basic.reqres.response.ResponseData;
 import com.f4Blog.basic.web.controller.AbstractController;
-import com.f4blog.admin.service.inter.GroupService;
-import com.f4blog.model.base.BaseGroup;
-import com.f4blog.model.constant.BaseC;
+import com.f4blog.admin.service.inter.RoleService;
+import com.f4blog.model.base.BaseRole;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.ibatis.annotations.Param;
@@ -18,60 +17,49 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-@Api("用户组管理")
-@RequestMapping("group")
+@Api("角色管理")
+@RequestMapping("role")
 @RestController
-public class GroupController extends AbstractController {
+public class RoleController extends AbstractController {
 
     @Autowired
-    GroupService groupService;
+    RoleService roleService;
 
-    @ApiOperation(value="分页查询", notes="查询用户组",httpMethod="get")
+    @ApiOperation(value="分页查询", notes="查询角色",httpMethod="get")
     @RequestMapping("query")
     public ResponseData query(@Param("page") Page page, String name) {
-        Page page1= groupService.query(page, name);
+        Page page1= roleService.query(page, name);
         return ResponseData.success(page1);
     }
 
     @ApiOperation(value="添加或编辑", notes="",httpMethod="post")
     @RequestMapping("add_or_edit")
-    public ResponseData add_or_edit(@Valid @RequestBody BaseGroup model, HttpServletRequest request) {
+    public ResponseData add_or_edit(@Valid @RequestBody BaseRole model, HttpServletRequest request) {
         RequestPara para= new RequestPara(request);
-        groupService.addOrEdit(model,para);
+        roleService.addOrEdit(model,para);
         return ResponseData.success();
     }
 
-    @ApiOperation(value="删除用户组(不包括子用户组)", notes="",httpMethod="post")
+    @ApiOperation(value="删除角色", notes="",httpMethod="post")
     @RequestMapping("delete")
     public ResponseData delete(Integer[] ids) {
-        groupService.delete(ids);
+        roleService.delete(ids);
         return ResponseData.success();
     }
 
-    @ApiOperation(value="删除用户组(包括子用户组)", notes="",httpMethod="post")
-    @RequestMapping("delete_chilren")
-    public ResponseData delete_chilren(Integer[] ids) {
-        groupService.delete(ids);
-        return ResponseData.success();
-    }
 
 
     @ApiOperation(value="获取所有", notes="",httpMethod="post")
     @RequestMapping("getAll")
     public ResponseData getAll(HttpServletRequest request) {
         RequestPara para= new RequestPara(request);
-        return ResponseData.success(groupService.getAll(para));
+        return ResponseData.success(roleService.getAll(para));
     }
-
-
 
     @RequestMapping("getById")
     public ResponseData getById( Integer id) {
-        return ResponseData.success(groupService.getById(id));
+        return ResponseData.success(roleService.getById(id));
     }
-
-
-
 
 
 }
