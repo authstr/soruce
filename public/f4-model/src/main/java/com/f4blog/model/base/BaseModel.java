@@ -48,8 +48,4 @@ public class BaseModel extends AbstractModel {
     @TableField(fill= FieldFill.INSERT_UPDATE)
     private  Date gmt_modified;
 
-
-
-
-
 }
