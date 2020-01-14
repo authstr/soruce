@@ -20,7 +20,7 @@
             elem: '#table_div'
             //容器唯一 id.id 是对表格的数据操作方法上是必要的传递条件
             , id: "table_id"
-            , height: 600
+            , height: 400
             //数据接口
             // ,url: '${request.contextPath}/user/query'
             //接口http请求类型
@@ -79,8 +79,20 @@
             layui_table.table_para.url = url;
             layui_table.table_para.cols = cols
         },
+        //更新表格的参数
+        update_table_para:function(para){
+            if(para!=null){
+                for(var key in para){
+                    layui_table.table_para[key]=para[key];
+                }
+            }
+        },
         //表格渲染
-        table_render: function () {
+        table_render: function (para) {
+            //预设表格高度
+            layui_table.table_para.height= $("body").height()-80;
+            //更新参数
+            layui_table.update_table_para(para);
             layui_table.tableins = layui.table.render(layui_table.table_para);
         },
 

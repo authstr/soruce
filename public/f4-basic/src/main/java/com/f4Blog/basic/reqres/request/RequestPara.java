@@ -1,6 +1,7 @@
 package com.f4Blog.basic.reqres.request;
 
 
+import com.f4Blog.basic.reqres.utils.WebUntil;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,13 +30,19 @@ public class RequestPara {
     private Map<String,Object> parameterObject=new HashMap<String,Object>();
 
 
-
-
+    public static RequestPara instance(){
+        RequestPara para=new RequestPara(WebUntil.getRequest());
+        return para;
+    }
 
 
     //有参初始化 从request获取map
     public RequestPara(HttpServletRequest request){
-        setRequest(request);
+        if(request!=null){
+            setRequest(request);
+        }else{
+            parameter=new HashMap<String,String>();
+        }
     }
     //无参初始化 new一个map
     public RequestPara(){ parameter=new HashMap<String,String>();}
@@ -46,6 +53,7 @@ public class RequestPara {
 
     //设置request对象
     public void setRequest(HttpServletRequest request) {
+
         this.request = request;
         //复制map
         parameterArray.putAll(request.getParameterMap());

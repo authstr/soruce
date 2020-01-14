@@ -107,7 +107,7 @@
     var E = {
         save: function () {
             var para = paraArrayToLiteral($("#form1").serializeArray());
-            postJSON("${request.contextPath}/menu/add_or_edit", para, function (o) {
+            $.post("${request.contextPath}/menu/add_or_edit", para, function (o) {
                 if (o.code == 0) {
                     layer.msg(o.message);
                     location.href = document.referrer;

@@ -8,6 +8,7 @@ import com.f4Blog.basic.exception.ServiceException;
 import com.f4Blog.basic.reqres.request.RequestPara;
 import com.f4Blog.basic.util.Md5Salt;
 import com.f4Blog.basic.web.service.BaseServiceImpl;
+import com.f4blog.admin.mapper.inter.RelationUserRoleDao;
 import com.f4blog.admin.mapper.inter.UserDao;
 import com.f4blog.admin.service.inter.UserService;
 import com.f4blog.admin.util.MsgEnum;
@@ -29,6 +30,9 @@ import java.util.Map;
 public class UserServiceImpl extends BaseServiceImpl<UserDao, BaseUser> implements UserService {
     @Autowired
     UserDao userDao;
+
+    @Autowired
+    RelationUserRoleDao relationUserRoleDao;
 
     @Override
     public Page query(@Param("page")Page page, String role, String gmt_create_start, String gmt_create_end, String username) {
@@ -69,7 +73,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserDao, BaseUser> implemen
             //删除当前用户的角色关联信息
             Map<String,Object> delete_where=new HashMap();
             delete_where.put("user_id",id);
-            userDao.deleteByMap(delete_where);
+            relationUserRoleDao.deleteByMap(delete_where);
 
             //创建角色关联信息并保存
             List<BaseRelationUserRole> temp=new ArrayList();
@@ -78,8 +82,8 @@ public class UserServiceImpl extends BaseServiceImpl<UserDao, BaseUser> implemen
                 relation.setUser_id(id);
                 relation.setRole_id(Integer.valueOf(role_ids[i]));
                 temp.add(relation);
+                relationUserRoleDao.insert(relation);
             }
-            new ServiceImpl().saveBatch(temp);
         }
 
         return model.getId();

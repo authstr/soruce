@@ -23,6 +23,9 @@ public class UserController extends AbstractController {
     @Autowired
     UserService userService;
 
+//    @Autowired
+//    CommonServiceImpl commonService;
+
     @ApiOperation(value="分页查询", notes="根据User对象创建用户")
     @RequestMapping("query")
     public ResponseData query(@Param("page") Page page, String role, String gmt_create_start, String gmt_create_end, String username) {
@@ -32,10 +35,11 @@ public class UserController extends AbstractController {
 
     @ApiOperation(value="添加或者编辑用户", notes="")
     @RequestMapping(value = "add_or_edit",method = RequestMethod.POST )
-    public ResponseData add_or_edit(@Valid  BaseUser user, String role_ids,HttpServletRequest request) {
+    public ResponseData add_or_edit(@Valid  BaseUser user,HttpServletRequest request) {
         RequestPara para=new RequestPara(request);
-//        return ResponseData.success(userService.addOrEdit(user,para));
-        return null;
+        return ResponseData.success(userService.addOrEdit(user,para));
+//        commonService.aa();
+//        return ResponseData.success();
     }
 
     @RequestMapping(value = "delete",method = RequestMethod.POST)

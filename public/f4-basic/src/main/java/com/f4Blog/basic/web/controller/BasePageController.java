@@ -87,11 +87,11 @@ public class BasePageController extends AbstractController {
      * @param request
      * @return
      */
-    @RequestMapping("pages/{pkg}/{pkg2}/{page}")
-    public ModelAndView page_view(ModelAndView model,@PathVariable("pkg") String pkg,@PathVariable("pkg2") String pkg2, @PathVariable("page") String page,HttpServletRequest request) {
+    @RequestMapping("pages/{pkg}/{pkg_child}/{page}")
+    public ModelAndView page_view(ModelAndView model,@PathVariable("pkg") String pkg,@PathVariable("pkg_child") String pkg_child, @PathVariable("page") String page,HttpServletRequest request) {
         setModelAndViewPara(model,request);
         setCommonPara(model);
-        model.setViewName(getSystemSkin() + "/" + pkg + "/" +pkg2+"/"+ page);
+        model.setViewName(getSystemSkin() + "/" + pkg + "/" +pkg_child+"/"+ page);
         return model;
     }
 

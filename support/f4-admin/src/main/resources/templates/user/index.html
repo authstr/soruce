@@ -40,8 +40,8 @@
             </div>
         </div>
         <div class="col-xs-12">
-            <div>
-                <table id="table_div" lay-filter="main"></table>
+            <div id="table_parent_div" >
+                <table id="table_div"  lay-filter="main"></table>
             </div>
         </div>
     </div>
@@ -105,8 +105,6 @@
         //编辑
         edit: function () {
             var id = layui_table.selectOne();
-            console.log("Dasd");
-            console.log(id);
             if (id != null) {
                 window.location.href = "${request.contextPath}/pages/user/add?id=" + id;
             }
