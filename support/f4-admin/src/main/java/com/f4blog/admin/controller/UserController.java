@@ -1,6 +1,7 @@
 package com.f4blog.admin.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.f4Blog.basic.reqres.request.RequestPara;
 import com.f4Blog.basic.reqres.response.ResponseData;
 import com.f4Blog.basic.web.controller.AbstractController;
 import com.f4blog.admin.service.inter.UserService;
@@ -11,6 +12,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Map;
 
@@ -28,10 +30,12 @@ public class UserController extends AbstractController {
         return ResponseData.success(page1);
     }
 
-    @ApiOperation(value="获取用户列表", notes="")
+    @ApiOperation(value="添加或者编辑用户", notes="")
     @RequestMapping(value = "add_or_edit",method = RequestMethod.POST )
-    public ResponseData add_or_edit(@Valid @RequestBody  BaseUser user) {
-        return ResponseData.success(userService.addOrEdit(user));
+    public ResponseData add_or_edit(@Valid  BaseUser user, String role_ids,HttpServletRequest request) {
+        RequestPara para=new RequestPara(request);
+//        return ResponseData.success(userService.addOrEdit(user,para));
+        return null;
     }
 
     @RequestMapping(value = "delete",method = RequestMethod.POST)
@@ -40,7 +44,7 @@ public class UserController extends AbstractController {
         return ResponseData.success();
     }
 
-    @RequestMapping(value = "getById",method = RequestMethod.POST)
+    @RequestMapping(value = "getById")
     public ResponseData getById( String id) {
         return ResponseData.success( userService.getById(id));
     }

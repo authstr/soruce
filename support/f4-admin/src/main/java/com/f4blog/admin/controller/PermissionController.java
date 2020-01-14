@@ -25,22 +25,22 @@ public class PermissionController extends AbstractController {
     @Autowired
     PermissionService permissionService;
 
-    @ApiOperation(value="分页查询", notes="查询权限",httpMethod="get")
+    @ApiOperation(value="分页查询", notes="查询权限",httpMethod="GET")
     @RequestMapping("query")
     public ResponseData query(@Param("page") Page page, String name) {
         Page page1= permissionService.query(page, name);
         return ResponseData.success(page1);
     }
 
-    @ApiOperation(value="添加或编辑", notes="",httpMethod="post")
+    @ApiOperation(value="添加或编辑", notes="",httpMethod="POST")
     @RequestMapping("add_or_edit")
-    public ResponseData add_or_edit(@Valid @RequestBody BasePermission model, HttpServletRequest request) {
+    public ResponseData add_or_edit(@Valid  BasePermission model, HttpServletRequest request) {
         RequestPara para= new RequestPara(request);
         permissionService.addOrEdit(model,para);
         return ResponseData.success();
     }
 
-    @ApiOperation(value="删除权限", notes="",httpMethod="post")
+    @ApiOperation(value="删除权限", notes="",httpMethod="POST")
     @RequestMapping("delete")
     public ResponseData delete(Integer[] ids) {
         permissionService.delete(ids);
@@ -49,7 +49,7 @@ public class PermissionController extends AbstractController {
 
 
 
-    @ApiOperation(value="获取所有", notes="",httpMethod="post")
+    @ApiOperation(value="获取所有", notes="",httpMethod="POST")
     @RequestMapping("getAll")
     public ResponseData getAll(HttpServletRequest request) {
         RequestPara para= new RequestPara(request);

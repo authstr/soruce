@@ -26,29 +26,29 @@ public class GroupController extends AbstractController {
     @Autowired
     GroupService groupService;
 
-    @ApiOperation(value="分页查询", notes="查询用户组",httpMethod="get")
+    @ApiOperation(value="分页查询", notes="查询用户组",httpMethod="GET")
     @RequestMapping("query")
     public ResponseData query(@Param("page") Page page, String name) {
         Page page1= groupService.query(page, name);
         return ResponseData.success(page1);
     }
 
-    @ApiOperation(value="添加或编辑", notes="",httpMethod="post")
+    @ApiOperation(value="添加或编辑", notes="",httpMethod="POST")
     @RequestMapping("add_or_edit")
-    public ResponseData add_or_edit(@Valid @RequestBody BaseGroup model, HttpServletRequest request) {
+    public ResponseData add_or_edit(@Valid  BaseGroup model, HttpServletRequest request) {
         RequestPara para= new RequestPara(request);
         groupService.addOrEdit(model,para);
         return ResponseData.success();
     }
 
-    @ApiOperation(value="删除用户组(不包括子用户组)", notes="",httpMethod="post")
+    @ApiOperation(value="删除用户组(不包括子用户组)", notes="",httpMethod="POST")
     @RequestMapping("delete")
     public ResponseData delete(Integer[] ids) {
         groupService.delete(ids);
         return ResponseData.success();
     }
 
-    @ApiOperation(value="删除用户组(包括子用户组)", notes="",httpMethod="post")
+    @ApiOperation(value="删除用户组(包括子用户组)", notes="",httpMethod="POST")
     @RequestMapping("delete_chilren")
     public ResponseData delete_chilren(Integer[] ids) {
         groupService.delete(ids);
@@ -56,7 +56,7 @@ public class GroupController extends AbstractController {
     }
 
 
-    @ApiOperation(value="获取所有", notes="",httpMethod="post")
+    @ApiOperation(value="获取所有", notes="",httpMethod="POST")
     @RequestMapping("getAll")
     public ResponseData getAll(HttpServletRequest request) {
         RequestPara para= new RequestPara(request);

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-@Api("菜单组管理")
+@Api("菜单管理")
 @RequestMapping("menu")
 @RestController
 public class MenuController extends AbstractController {
@@ -25,29 +25,29 @@ public class MenuController extends AbstractController {
     @Autowired
     MenuService MenuService;
 
-    @ApiOperation(value="分页查询", notes="查询菜单组",httpMethod="get")
+    @ApiOperation(value="分页查询", notes="查询菜单组",httpMethod="GET")
     @RequestMapping("query")
     public ResponseData query(@Param("page") Page page, String name) {
         Page page1= MenuService.query(page, name);
         return ResponseData.success(page1);
     }
 
-    @ApiOperation(value="添加或编辑", notes="",httpMethod="post")
+    @ApiOperation(value="添加或编辑", notes="",httpMethod="POST")
     @RequestMapping("add_or_edit")
-    public ResponseData add_or_edit(@Valid @RequestBody BaseMenu model, HttpServletRequest request) {
+    public ResponseData add_or_edit(@Valid  BaseMenu model, HttpServletRequest request) {
         RequestPara para= new RequestPara(request);
         MenuService.addOrEdit(model,para);
         return ResponseData.success();
     }
 
-    @ApiOperation(value="删除菜单组(不包括子菜单组)", notes="",httpMethod="post")
+    @ApiOperation(value="删除菜单组(不包括子菜单组)", notes="",httpMethod="POST")
     @RequestMapping("delete")
     public ResponseData delete(Integer[] ids) {
         MenuService.delete(ids);
         return ResponseData.success();
     }
 
-    @ApiOperation(value="删除菜单组(包括子菜单组)", notes="",httpMethod="post")
+    @ApiOperation(value="删除菜单组(包括子菜单组)", notes="",httpMethod="POST")
     @RequestMapping("delete_chilren")
     public ResponseData delete_chilren(Integer[] ids) {
         MenuService.delete(ids);
@@ -55,7 +55,7 @@ public class MenuController extends AbstractController {
     }
 
 
-    @ApiOperation(value="获取所有", notes="",httpMethod="post")
+    @ApiOperation(value="获取所有", notes="",httpMethod="POST")
     @RequestMapping("getAll")
     public ResponseData getAll(HttpServletRequest request) {
         RequestPara para= new RequestPara(request);

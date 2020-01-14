@@ -45,7 +45,24 @@ var common_utils={
 function paraArrayToLiteral(para) {
     var literal = {};
     for (var i = 0; i < para.length; i++) {
-        literal[para[i].name] = para[i].value
+        var key=para[i].name;
+        //如果当前值已经存在,说明有一个参数是数组
+        if(literal[key]!=null){
+            //把value改成数组类型,储存所有值
+            var curr=literal[key];
+            if((typeof curr)=="object"){
+                curr.push(para[i].value)
+                literal[key]=curr;
+            }else{
+                var temp=new Array()
+                temp.push(curr);
+                temp.push(para[i].value)
+                literal[key]=temp;
+            }
+        }else{
+            literal[key] = para[i].value
+        }
+
     }
     return literal;
 }

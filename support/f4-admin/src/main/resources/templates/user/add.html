@@ -51,6 +51,14 @@
                     </div>
 
                     <div class="form-group">
+                        <label class="col-xs-2 control-label">所属角色</label>
+                        <div class="col-xs-10">
+                            <select class="form-control input_50b"  name ="role_ids" id="role_ids" multiple="multiple" autofocus  >
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label class="col-xs-2 control-label">备注</label>
                         <div class="col-xs-10">
                             <textarea type="text" class="form-control input_50b" style="height:120px;resize:none;"
@@ -79,14 +87,37 @@
             if (para.password != '') {
                 para.password = $.md5(para.password);
             }
-            postJSON("${request.contextPath}/user/add_or_edit", para, function (o) {
-                if (o.code == 0) {
-                    layer.msg(o.message);
-                    location.href = document.referrer;
-                } else {
-                    layui_layer.error_alert(o.message);
+            para.role_ids="1,3";
+            // postJSON("${request.contextPath}/user/add_or_edit", para, function (o) {
+            //     if (o.code == 0) {
+            //         layer.msg(o.message);
+            //         // location.href = document.referrer;
+            //     } else {
+            //         layui_layer.error_alert(o.message);
+            //     }
+            // });
+
+            $.ajax({
+                type: "POST",
+                url: "${request.contextPath}/user/add_or_edit",
+                data: para,
+                success:function () {
+                    if (o.code == 0) {
+                        layer.msg(o.message);
+                        // location.href = document.referrer;
+                    } else {
+                        layui_layer.error_alert(o.message);
+                    }
                 }
             });
+            // $.post("${request.contextPath}/user/add_or_edit", para, function (o) {
+            //     if (o.code == 0) {
+            //         layer.msg(o.message);
+            //         // location.href = document.referrer;
+            //     } else {
+            //         layui_layer.error_alert(o.message);
+            //     }
+            // })
 
         },
         load: function () {
@@ -98,6 +129,7 @@
         }
     }
     $(function () {
+        load.load_select2("role_ids","请选择所属角色","${request.contextPath}/role/getAll",{})
         var id = $("#id").val()
         if (id != null && id != "") {
             E.load();
