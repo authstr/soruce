@@ -65,6 +65,16 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleDao, BaseRole> implemen
         }
     }
 
+    /**
+     * 查询指定用户的角色的信息
+     * @param user_id
+     * @return
+     */
+    @Override
+    public  List<String> getRoleIdByUserId(String user_id){
+        return roleDao.getRoleIdByUserId(user_id);
+    }
+
 
 
 }

@@ -2,6 +2,8 @@ package com.f4Blog.basic.reqres.response;
 
 import com.f4Blog.basic.exception.BasicException;
 import com.f4Blog.basic.exception.ExceptionEnumInterface;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
@@ -65,9 +67,28 @@ public class ResponseData {
         return new SuccessResponseData(data);
     }
 
+    /**
+     * 创建一个默认的成功返回对象.之后以键值对的方式,保存两个对象到Date
+     * @param key1 对象1的key
+     * @param value1 对象1
+     * @param key2 对象2的key
+     * @param value2 对象2
+     */
     public static SuccessResponseData success(String key1,Object value1,String key2,Object value2) {
         SuccessResponseData successResponseData=new SuccessResponseData();
         successResponseData.setData( key1, value1, key2, value2);
+        return successResponseData;
+    }
+
+    /**
+     * 创建一个默认的成功返回对象.之后以父子关系的方式,保存两个对象到Date.父对象将转换为map作为data,子对象将作为map的一个键值对
+     * @param parentData 父对象
+     * @param childName 子对象的key
+     * @param childData 子对象
+     */
+    public static SuccessResponseData success(Object parentData,String childName,Object childData) {
+        SuccessResponseData successResponseData=new SuccessResponseData();
+        successResponseData.setParentChildData( parentData, childName, childData);
         return successResponseData;
     }
 
@@ -88,8 +109,13 @@ public class ResponseData {
         return new ErrorResponseData(code, message, data);
     }
 
+
     /**
      * 用于以键值对的方式,保存两个对象到Date
+     * @param key1 对象1的key
+     * @param value1 对象1
+     * @param key2 对象2的key
+     * @param value2 对象2
      */
     public void setData(String key1,Object value1,String key2,Object value2) {
         putData(key1,value1);
@@ -98,26 +124,70 @@ public class ResponseData {
 
 
     /**
-     * 将一个键值对保存到返回值的data里.
-     * data的类型将变更为Map,如果data里已经有了数据,原有的数据将作为 键值对 'data':原来的数据 保存到Map中
+     * 用于以父子关系的方式,保存两个对象到Date.父对象将转换为map作为data,子对象将作为map的一个键值对
+     * @param parentData 父对象
+     * @param childName 子对象的key
+     * @param childData 子对象
+     */
+    public void setParentChildData(Object parentData,String childName,Object childData) {
+        putData(parentData);
+        putData(childName,childData);
+    }
+
+    /**
+     * 将字段data设置为Map对象,原来的对象会转换为Map进行保存,无法转换则保存到'data'键
+     */
+    public Map<String,Object> dataSetMap(){
+        Object old_object=this.getData();
+        //判断当前data储存的是否为Map
+        if(!(old_object instanceof Map)){
+            Map<String,Object> mapData=null;
+            //如果不是map,创建一个map, 原来的对象会转换为Map进行保存,无法转换保存到'data'键
+            mapData=new HashMap<>();
+            if(old_object!=null){
+                try {
+                    Map<String,Object> tmep=PropertyUtils.describe(old_object);
+                    //移除无关的class键
+                    tmep.remove("class");
+                    mapData.putAll(tmep);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    mapData.put("data",old_object);
+                }
+            }
+            setData(mapData);
+        }
+        return (Map<String,Object> )getData();
+    }
+
+
+    /**
+     * 将一个键值对保存到 data的 map 里
      * @param key
      * @param value
      */
     public void putData(String key,Object value){
-        Object old_object=this.getData();
-        Map<String,Object> mapData=null;
-        //判断当前data储存的是否为Map,如果是,往Map里放入数据
-        if(old_object instanceof Map){
-            mapData=( Map<String,Object>) old_object;
-        }else{
-            //如果不是map,创建一个map,将原来数据保存到'data'键
-            mapData=new HashMap<>();
-            if(old_object!=null){
-                mapData.put("data",old_object);
-            }
-            setData(mapData);
-        }
+        Map<String,Object> mapData=dataSetMap();
         mapData.put(key,value);
+    }
+
+    /**
+     * 将一个对象转换为map,合并到 data的map 里
+     * @param entity
+     */
+    public void putData(Object entity){
+        Map<String,Object> mapData=dataSetMap();
+        if(entity!=null){
+            try {
+                Map<String,Object> tmep= PropertyUtils.describe(entity);
+                //移除无关的class键
+                tmep.remove("class");
+                mapData.putAll(tmep);
+            }catch (Exception e){
+                e.printStackTrace();
+                mapData.put(entity.getClass().getName(),entity);
+            }
+        }
     }
 
     public Boolean getSuccess() {

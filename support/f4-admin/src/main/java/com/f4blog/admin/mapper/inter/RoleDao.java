@@ -15,4 +15,7 @@ public interface RoleDao extends BaseMapper<BaseRole> {
     Page query(@Param("page") Page page, String name);
 
     List<Map> getAll(String name);
+
+    List<String> getRoleIdByUserId(String user_id);
+
 }

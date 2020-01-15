@@ -1,9 +1,11 @@
 package com.f4blog.admin.controller;
 
+import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.f4Blog.basic.reqres.request.RequestPara;
 import com.f4Blog.basic.reqres.response.ResponseData;
 import com.f4Blog.basic.web.controller.AbstractController;
+import com.f4blog.admin.service.inter.RoleService;
 import com.f4blog.admin.service.inter.UserService;
 import com.f4blog.model.base.BaseUser;
 import io.swagger.annotations.ApiImplicitParam;
@@ -22,6 +24,9 @@ public class UserController extends AbstractController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    RoleService roleService;
 
     @ApiOperation(value="分页查询", notes="根据User对象创建用户")
     @RequestMapping("query")
@@ -45,7 +50,7 @@ public class UserController extends AbstractController {
 
     @RequestMapping(value = "getById")
     public ResponseData getById( String id) {
-        return ResponseData.success( userService.getById(id));
+        return ResponseData.success(userService.getById(id),"role_ids",roleService.getRoleIdByUserId(id));
     }
 
 
