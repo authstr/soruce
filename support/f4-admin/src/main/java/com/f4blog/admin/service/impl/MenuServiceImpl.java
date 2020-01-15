@@ -44,7 +44,7 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuDao, BaseMenu> implemen
     @Transactional(rollbackFor=Exception.class)
     @Override
     public void addOrEdit(BaseMenu model, RequestPara para) {
-        Assert.isTrue(super.isUnique(model,"name"),"菜单名称不能重复");
+        Assert.isTrue(super.isUnique(model,"code"),"菜单编码不能重复");
         if(model.getStatus()==null){
             model.setStatus(BaseC.COMMON_STATUS_NORMAL);
         }

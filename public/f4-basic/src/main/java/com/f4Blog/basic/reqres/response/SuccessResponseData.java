@@ -9,12 +9,12 @@ import com.f4Blog.basic.exception.BaseExceptionEnum;
  */
 public class SuccessResponseData extends ResponseData {
     public SuccessResponseData() {
-        super(true, BaseExceptionEnum.SUCCESS.getCode(), BaseExceptionEnum.SUCCESS.getMessage(), (Object)null);
+        super(true, BaseExceptionEnum.SUCCESS.getCode(), BaseExceptionEnum.SUCCESS.getMessage(), null);
     }
-    public SuccessResponseData(Object object) {
-        super(true,  BaseExceptionEnum.SUCCESS.getCode(),BaseExceptionEnum.SUCCESS.getMessage(), object);
+    public SuccessResponseData(Object data) {
+        super(true,  BaseExceptionEnum.SUCCESS.getCode(),BaseExceptionEnum.SUCCESS.getMessage(), data);
     }
-    public SuccessResponseData(String code, String message, Object object) {
-        super(true, code, message, object);
+    public SuccessResponseData(String code, String message, Object data) {
+        super(true, code, message, data);
     }
 }

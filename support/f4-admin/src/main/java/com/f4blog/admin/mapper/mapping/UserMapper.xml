@@ -12,13 +12,18 @@
 <!--    </resultMap>-->
 
     <select id="query" resultType="map">
-        SELECT a.* FROM base_user a where 1=1
+        SELECT a.*,group_concat(role.name) as role_info FROM base_user a
+        left join base_relation_user_role r_user_role on r_user_role.user_id=a.id
+        left join base_role role on role.id=r_user_role.role_id
+        where 1=1
         <if test="username != null and username != ''">
            and a.username like CONCAT('%',#{username},'%')
         </if>
         <if test="gmt_create_start != null and gmt_create_start != '' and gmt_create_end != null and gmt_create_end != ''">
             and (a.gmt_create between CONCAT(#{gmt_create_start},' 00:00:00') and CONCAT(#{gmt_create_end},' 23:59:59'))
         </if>
+
+        GROUP BY a.id
     </select>
 
 

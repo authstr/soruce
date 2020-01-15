@@ -98,10 +98,14 @@
 
         //表格搜索 参数:搜索参数
         search: function (search_para) {
+            var curr_page=1;
+            // if(search_para==null){
+            //     curr_page=$(".layui-laypage-em").next().html();
+            // }
             var search_para = {
                 where: search_para,
                 page: {
-                    curr: 1
+                    curr: curr_page
                 }
             }
             layui.table.reload(layui_table.table_para.id, search_para)

@@ -22,8 +22,8 @@ public class ErrorResponseData extends ResponseData {
         super(false, code, message, null);
     }
 
-    public ErrorResponseData(String code, String message, Object object) {
-        super(false, code, message, object);
+    public ErrorResponseData(String code, String message, Object data) {
+        super(false, code, message, data);
     }
 
     public String getExceptionClazz() {

@@ -39,5 +39,5 @@ public class BaseUser  extends BaseModel {
 	private Integer user_type;
 
 	//状态
-	private Integer status_id;
+	private Integer status;
 }

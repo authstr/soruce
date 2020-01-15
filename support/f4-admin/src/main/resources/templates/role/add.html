@@ -19,43 +19,10 @@
                 <form class="form-horizontal" role="form" id="form1">
                     <input type="hidden" name="id" id="id" value="${id!?html}"/>
                     <div class="form-group">
-                        <label class="col-xs-2 control-label"><em class="text-red">*</em>用户名</label>
+                        <label class="col-xs-2 control-label"><em class="text-red">*</em>角色名称</label>
                         <div class="col-xs-10">
-                            <input type="text" class="form-control input_50b" id="username" name="username"
-                                   placeholder="用户名">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-xs-2 control-label"><em class="text-red">*</em>密码</label>
-                        <div class="col-xs-10">
-                            <input type="hidden" name="password" id="password" >
-                            <input type="text" class="form-control input_50b"  id="show_password"
-                                   placeholder="请输入密码">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-xs-2 control-label">手机号</label>
-                        <div class="col-xs-10">
-                            <input type="text" class="form-control input_50b" name="phone" id="phone"
-                                   placeholder="请输入手机号">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-xs-2 control-label">邮箱</label>
-                        <div class="col-xs-10">
-                            <input type="text" class="form-control input_50b" name="email" id="email"
-                                   placeholder="请输入邮箱">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-xs-2 control-label">所属角色</label>
-                        <div class="col-xs-10">
-                            <select class="form-control input_50b"  name ="role_ids" id="role_ids" multiple="multiple" autofocus  >
-                            </select>
+                            <input type="text" class="form-control input_50b" id="name" name="name"
+                                   placeholder="角色名称">
                         </div>
                     </div>
 
@@ -81,31 +48,28 @@
 </body>
 <#include "../common/layui_init.html">
 <script type="text/javascript">
-
     var E = {
         save: function () {
-            $("#password").val($.md5($("#show_password").val()));
-            $.post("${request.contextPath}/user/add_or_edit", $("#form1").serialize(), function (o) {
+            var para = paraArrayToLiteral($("#form1").serializeArray());
+            $.post("${request.contextPath}/role/add_or_edit", para, function (o) {
                 if (o.code == 0) {
                     layer.msg(o.message);
                     location.href = document.referrer;
                 } else {
                     layui_layer.error_alert(o.message);
                 }
-            })
+            });
+
         },
         load: function () {
-            $.getJSON("${request.contextPath}/user/getById", {id: $("#id").val()}, function (o) {
+            $.getJSON("${request.contextPath}/role/getById", {id: $("#id").val()}, function (o) {
                 if (o.code == 0) {
                     $("#form1").setFormValues(o.data);
-                    $("#show_password").attr("placeholder",o.data.password)
-
                 }
             });
         }
     }
     $(function () {
-        load.load_select2("role_ids","请选择所属角色","${request.contextPath}/role/getAll",{})
         var id = $("#id").val()
         if (id != null && id != "") {
             E.load();

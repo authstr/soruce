@@ -4,6 +4,9 @@ import com.f4Blog.basic.exception.BasicException;
 import com.f4Blog.basic.exception.ExceptionEnumInterface;
 import org.springframework.util.StringUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 对请求返回的数据进行封装  父类
  * @author authstr
@@ -58,13 +61,19 @@ public class ResponseData {
         return new SuccessResponseData();
     }
 
-    public static SuccessResponseData success(Object object) {
-        return new SuccessResponseData(object);
+    public static SuccessResponseData success(Object data) {
+        return new SuccessResponseData(data);
+    }
+
+    public static SuccessResponseData success(String key1,Object value1,String key2,Object value2) {
+        SuccessResponseData successResponseData=new SuccessResponseData();
+        successResponseData.setData( key1, value1, key2, value2);
+        return successResponseData;
     }
 
 
-    public static SuccessResponseData success(String code, String message, Object object) {
-        return new SuccessResponseData(code, message, object);
+    public static SuccessResponseData success(String code, String message, Object data) {
+        return new SuccessResponseData(code, message, data);
     }
 
     public static ErrorResponseData error(String message) {
@@ -75,11 +84,41 @@ public class ResponseData {
         return new ErrorResponseData(code, message);
     }
 
-    public static ErrorResponseData error(String code, String message, Object object) {
-        return new ErrorResponseData(code, message, object);
+    public static ErrorResponseData error(String code, String message, Object data) {
+        return new ErrorResponseData(code, message, data);
+    }
+
+    /**
+     * 用于以键值对的方式,保存两个对象到Date
+     */
+    public void setData(String key1,Object value1,String key2,Object value2) {
+        putData(key1,value1);
+        putData(key2,value2);
     }
 
 
+    /**
+     * 将一个键值对保存到返回值的data里.
+     * data的类型将变更为Map,如果data里已经有了数据,原有的数据将作为 键值对 'data':原来的数据 保存到Map中
+     * @param key
+     * @param value
+     */
+    public void putData(String key,Object value){
+        Object old_object=this.getData();
+        Map<String,Object> mapData=null;
+        //判断当前data储存的是否为Map,如果是,往Map里放入数据
+        if(old_object instanceof Map){
+            mapData=( Map<String,Object>) old_object;
+        }else{
+            //如果不是map,创建一个map,将原来数据保存到'data'键
+            mapData=new HashMap<>();
+            if(old_object!=null){
+                mapData.put("data",old_object);
+            }
+            setData(mapData);
+        }
+        mapData.put(key,value);
+    }
 
     public Boolean getSuccess() {
         return success;

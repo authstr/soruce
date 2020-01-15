@@ -14,6 +14,10 @@ import javax.validation.constraints.NotNull;
 @TableName(value = "base_menu")
 public class BaseMenu extends BaseModel {
 
+	//菜单编码
+	@NotEmpty(message = "菜单编码不能为空")
+	private String code;
+
 	//菜单名称
 	@NotEmpty(message = "菜单名称不能为空")
 	private String name;
@@ -34,7 +38,7 @@ public class BaseMenu extends BaseModel {
 	//菜单的url
 	private  String url;
 
-	//父菜单id
+	//父菜单_id
 	private  Integer parent_id;
 
 	//该菜单所有的父菜单id集合,数据格式:[0],[2],[152],
