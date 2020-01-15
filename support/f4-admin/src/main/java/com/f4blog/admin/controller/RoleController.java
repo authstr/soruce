@@ -10,7 +10,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,19 +33,25 @@ public class RoleController extends AbstractController {
 
     @ApiOperation(value="添加或编辑", notes="",httpMethod="POST")
     @RequestMapping("add_or_edit")
-    public ResponseData add_or_edit(@Valid  BaseRole model, HttpServletRequest request) {
+    public ResponseData add_or_edit(@Valid BaseRole model, HttpServletRequest request) {
         RequestPara para= new RequestPara(request);
         roleService.addOrEdit(model,para);
         return ResponseData.success();
     }
 
-    @ApiOperation(value="删除角色", notes="",httpMethod="POST")
+    @ApiOperation(value="删除角色(不包括子角色)", notes="",httpMethod="POST")
     @RequestMapping("delete")
     public ResponseData delete(Integer[] ids) {
         roleService.delete(ids);
         return ResponseData.success();
     }
 
+    @ApiOperation(value="删除角色(包括子角色)", notes="",httpMethod="POST")
+    @RequestMapping("delete_chilren")
+    public ResponseData delete_chilren(Integer[] ids) {
+        roleService.delete(ids);
+        return ResponseData.success();
+    }
 
 
     @ApiOperation(value="获取所有", notes="",httpMethod="POST")
@@ -56,10 +61,15 @@ public class RoleController extends AbstractController {
         return ResponseData.success(roleService.getAll(para));
     }
 
+
+
     @RequestMapping("getById")
     public ResponseData getById( Integer id) {
         return ResponseData.success(roleService.getById(id));
     }
+
+
+
 
 
 }

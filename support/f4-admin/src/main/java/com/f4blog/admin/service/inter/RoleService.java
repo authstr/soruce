@@ -24,6 +24,8 @@ public interface RoleService extends IService<BaseRole> {
     @Transactional(rollbackFor=Exception.class)
     void delete(Integer[] ids);
 
-    List<String> getRoleIdByUserId(String getRoleByUserId);
+    @Transactional(rollbackFor=Exception.class)
+    void deleteChildren(Integer[] ids);
 
+    List<String> getRoleIdByUserId(String user_id);
 }

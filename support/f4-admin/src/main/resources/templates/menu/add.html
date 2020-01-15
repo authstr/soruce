@@ -100,7 +100,7 @@
                 </form>
                 <div class="form-group ">
                     <label class="col-xs-2 control-label"></label>
-                    <a class="gbn gbn-m" href="javascript:" onclick="E.save();">保存</a>
+                    <a class="gbn gbn-m" href="javascript:" id="btn_save" onclick="E.save();">保存</a>
                     <a class="gbn gbn-m gbn-red" href="javascript:" onclick="history.back();">返回</a>
                 </div>
             </div>
@@ -114,8 +114,7 @@
 
     var E = {
         save: function () {
-            var para = paraArrayToLiteral($("#form1").serializeArray());
-            $.post("${request.contextPath}/menu/add_or_edit", para, function (o) {
+            $.post("${request.contextPath}/menu/add_or_edit",$("#form1").serialize(), function (o) {
                 if (o.code == 0) {
                     layer.msg(o.message);
                     location.href = document.referrer;
@@ -146,6 +145,8 @@
 
     }
     $(function () {
+        //回车点击事件 保存
+        enter_event.event_save_click();
         E.load_orderno('orderno',"请选择排序号")
         load.load_select2("parent_id","请选择父菜单","${request.contextPath}/menu/getAll",{})
         var id = $("#id").val()

@@ -50,7 +50,7 @@
 				</form>
 				<div  class="form-group ">
 					<label class="col-xs-2 control-label"></label>
-					<a class="gbn gbn-m" href="javascript:" onclick="E.save();" >保存</a>
+					<a class="gbn gbn-m" href="javascript:" id="btn_save" onclick="E.save();" >保存</a>
 					<a class="gbn gbn-m gbn-red" href="javascript:" onclick="history.back();" >返回</a>
 				</div>
 			</div>
@@ -101,6 +101,8 @@
 		// }
 	}
 	$(function(){
+		//回车点击事件 保存
+		enter_event.event_save_click();
 		$.ajaxSettings.async=false;
 		var id=$("#id").val()
 		E.load_dict_type()

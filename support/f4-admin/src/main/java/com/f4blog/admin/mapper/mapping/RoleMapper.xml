@@ -3,6 +3,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.f4blog.admin.mapper.inter.RoleDao">
+
+
     <select id="query" resultType="map">
         SELECT a.* FROM base_role a where 1=1
         <if test="name != null and name != ''">
@@ -15,6 +17,17 @@
         <if test="name != null and name != ''">
             and a.name like CONCAT('%',#{name},'%')
         </if>
+        <if test="exclude_id != null and exclude_id != ''">
+            and !( a.parent_ids LIKE CONCAT('%$[',#{exclude_id},'$]%') escape '$')
+            and a.id != #{exclude_id}
+        </if>
+    </select>
+
+    <select id="getLikeParentIds" resultType="com.f4blog.model.base.BaseRole">
+        SELECT a.* FROM base_role a where 1=1
+        <if test="id != null and id != ''">
+            and parent_ids LIKE CONCAT('%$[',#{id},'$]%') escape '$'
+        </if>
     </select>
 
     <select id="getRoleIdByUserId" resultType="string">
@@ -25,6 +38,7 @@
             and r_user_role.user_id = ${user_id}
         </if>
     </select>
+
 </mapper>
 
 

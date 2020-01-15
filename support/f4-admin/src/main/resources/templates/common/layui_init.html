@@ -196,8 +196,55 @@
             }
             return "";
         }
+    }
 
+    var layui_table_tree={
+        //表格渲染结束后的树状表格对象
+        tableins: null,
+        //用于创建表格的参数
+        table_para: {
+            elem: '#table_div'
+            //容器唯一 id.id 是对表格的数据操作方法上是必要的传递条件
+            , id: "tableTree_id"
+            , height: 400
+            //get请求路径
+            // ,url: '${request.contextPath}/user/query'
+            //请求参数
+            ,para:''
+            ,url:"${request.contextPath}/role/getAl"
+            ,data:null  // 数据
+            ,tree: {
+                isPidData:true,
+                iconIndex: 1 // 折叠图标显示在第几列
+                ,idName:"id"
+                , pidName:'parent_id'
+                ,openName:'name'
+            },
+            cols: null
+        },
+        //设置表格渲染的核心参数 url和表头信息,表格头部工具栏区域(script的id)
+        set_table_data: function (url, cols, toolbar) {
+            layui_table.table_para.toolbar = toolbar;
+            layui_table.table_para.url = url;
+            layui_table.table_para.cols = cols
+        },
 
+        //更新表格的参数
+        update_table_para:function(para){
+            if(para!=null){
+                for(var key in para){
+                    layui_table_tree.table_para[key]=para[key];
+                }
+            }
+        },
+        // 展开全部
+        expandAll:function(){
+            layui_table_tree.tableins.expandAll();
+        },
+        //  折叠全部
+        foldAll:function(){
+            layui_table_tree.tableins.foldAll();
+        },
     }
 
 
