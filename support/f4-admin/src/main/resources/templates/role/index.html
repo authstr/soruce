@@ -94,33 +94,14 @@
     ]
     //页面要用的方法
     table_func = {
-        //树状表格对象
-        tableTree_obj:null,
         //表格初始化
         init: function () {
-            $.getJSON("${request.contextPath}/role/getAll", $("#inquire").serialize(),function (o) {
-                if (o.code == 0) {
-                    // 渲染表格
-                    table_func.tableTree_obj =  layui.treeTable .render({
-                        elem: '#table_div'
-                        , id: "tableTree_id"
-                        ,url:"${request.contextPath}/role/getAl"
-                        ,data: o.data  // 数据
-                        ,tree: {
-                            isPidData:true,
-                            iconIndex: 1 // 折叠图标显示在第几列
-                            ,idName:"id"
-                            , pidName:'parent_id'
-                            ,openName:'name'
-                        },
-                        cols: cols
-                    });
-                }
-            });
+            layui_table_tree.set_table_data("${request.contextPath}/role/getAll",cols,$("#inquire").serialize())
+            layui_table_tree.table_load_render();
         },
         //搜索
         search: function () {
-            tableTree_obj.filterData($("#name").val());
+            layui_table_tree.search($("#inquire").serialize())
         },
         //添加
         add: function () {
@@ -136,11 +117,11 @@
         },
         // 展开全部
         expandAll:function(){
-            tableTree_obj.expandAll();
+            layui_table_tree.expandAll();
         },
         //  折叠全部
         foldAll:function(){
-            tableTree_obj.foldAll();
+            layui_table_tree.foldAll();
         },
         //删除
         delete: function () {

@@ -204,31 +204,70 @@
         //用于创建表格的参数
         table_para: {
             elem: '#table_div'
-            //容器唯一 id.id 是对表格的数据操作方法上是必要的传递条件
+            //容器唯一 id. id 是对表格的数据操作方法上必要的传递条件
             , id: "tableTree_id"
-            , height: 400
-            //get请求路径
-            // ,url: '${request.contextPath}/user/query'
             //请求参数
             ,para:''
             ,url:"${request.contextPath}/role/getAl"
             ,data:null  // 数据
             ,tree: {
-                isPidData:true,
-                iconIndex: 1 // 折叠图标显示在第几列
+                //是否是pid形式的数据
+                isPidData:true
+                // 折叠图标显示在第几列
+                ,iconIndex: 1
+                // 设定id的字段名
                 ,idName:"id"
+                //设定pid的字段名，children形式数据不需要
                 , pidName:'parent_id'
+                //设定是否默认展开的字段名
                 ,openName:'name'
             },
             cols: null
         },
-        //设置表格渲染的核心参数 url和表头信息,表格头部工具栏区域(script的id)
-        set_table_data: function (url, cols, toolbar) {
-            layui_table.table_para.toolbar = toolbar;
-            layui_table.table_para.url = url;
-            layui_table.table_para.cols = cols
+        //设置表格渲染的核心参数 url和表头信息,url参数
+        set_table_data: function (url, cols, para) {
+            layui_table_tree.table_para.url = url;
+            layui_table_tree.table_para.cols = cols;
+            layui_table_tree.table_para.para = para;
         },
 
+        //设置表格渲染的核心参数 url和表头信息,url参数,tree显示设置
+        set_table_data_tree: function (url, cols, para,tree) {
+            layui_table_tree.table_para.url = url;
+            layui_table_tree.table_para.cols = cols;
+            layui_table_tree.table_para.para = para;
+            layui_table_tree.table_para.tree = tree;
+        },
+        //通过设置的url与参数相关信息,加载tree展示需要的数据
+        load_tree_data(para){
+            layui_table_tree.update_table_para(para);
+            var url=layui_table_tree.table_para.url;
+            var para=layui_table_tree.table_para.para;
+
+            $.ajaxSettings.async=false;
+            $.getJSON(url, para,function (o) {
+                if (o.code == 0) {
+                    layui_table_tree.table_para.data=o.data;
+                }
+            });
+            $.ajaxSettings.async=true;
+
+        },
+        //表格渲染
+        table_render: function () {
+            layui_table_tree.tableins = layui.treeTable.render(layui_table_tree.table_para);
+        },
+        //加载表格数据并渲染
+        table_load_render:function(para){
+            layui_table_tree.load_tree_data(para);
+            layui_table_tree.table_render();
+        },
+
+        //表格搜索  search_para: 请求的参数
+        search: function (search_para) {
+            layui_table_tree.table_para.para=search_para;
+            layui_table_tree.table_load_render();
+        },
         //更新表格的参数
         update_table_para:function(para){
             if(para!=null){
@@ -325,7 +364,6 @@
     }
 
     var layui_utils={
-
         transform_map:function (value,map) {
             var res=map[value];
             return res!=null?res:"";
