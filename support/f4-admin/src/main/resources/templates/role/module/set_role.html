@@ -5,7 +5,7 @@
     <meta http-equiv="content-type" content="text/html;charset=utf-8">
     <meta content="always" name="referrer">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <#include "../common/header.html">
+    <#include "../../common/header.html">
 </head>
 <body>
 <!--最外面的灰底框,用于与ifram区别开-->
@@ -66,12 +66,13 @@
     </div>
 </div>
 </body>
-<#include "../common/layui_init.html">
+<#include "../../common/layui_init.html">
 <!--表格工具类的按钮-->
 <script type="text/javascript">
     //树状表格 表头
     var cols = [
-        {type: 'radio'}
+        // {type: 'checkbox'}
+        {field: 'id', title: 'id', sort: true, type: 'checkbox', fixed: 'left'}
         , {field: 'name', title: '角色名称'}
         , {field: 'code', title: '角色别名'}
         // , {field: 'parent_ids', title: '父级'}
@@ -159,8 +160,14 @@
     $(function () {
         //回车点击事件 搜索
         enter_event.event_search_click();
+        //树状表格渲染
         table_func.init();
+        //取消 父复选框到子复选框的联动
+        layui_table_tree.closeCheckboxParentLinkage();
+        //设置点击表格行,进行选中
+        layui_table_tree.click_line_checked()
+
     });
 </script>
-<#include "../common/footer-inner.html">
+<#include "../../common/footer-inner.html">
 </html>

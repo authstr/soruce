@@ -179,13 +179,16 @@
             var table_data = layui_table.get_checked_data();
             if (table_data == null) {
                 layer.msg("无法获取选中数据", {icon: 2});
+                return null;
             }
             if (table_data.length < 1) {
                 layer.msg("至少要选中一条数据", {icon: 2});
+                return null;
             }
             var many_id = paraGetId(table_data);
             if (many_id == null) {
                 layer.msg("无法获取选中行id", {icon: 2});
+                return null;
             }
             return many_id;
         },
@@ -219,18 +222,18 @@
                 ,idName:"id"
                 //设定pid的字段名，children形式数据不需要
                 , pidName:'parent_id'
-                //设定是否默认展开的字段名
+                //自定义默认展开的字段名
                 ,openName:'name'
             },
             cols: null
         },
+
         //设置表格渲染的核心参数 url和表头信息,url参数
         set_table_data: function (url, cols, para) {
             layui_table_tree.table_para.url = url;
             layui_table_tree.table_para.cols = cols;
             layui_table_tree.table_para.para = para;
         },
-
         //设置表格渲染的核心参数 url和表头信息,url参数,tree显示设置
         set_table_data_tree: function (url, cols, para,tree) {
             layui_table_tree.table_para.url = url;
@@ -238,6 +241,15 @@
             layui_table_tree.table_para.para = para;
             layui_table_tree.table_para.tree = tree;
         },
+        //更新表格的参数
+        update_table_para:function(para){
+            if(para!=null){
+                for(var key in para){
+                    layui_table_tree.table_para[key]=para[key];
+                }
+            }
+        },
+
         //通过设置的url与参数相关信息,加载tree展示需要的数据
         load_tree_data(para){
             layui_table_tree.update_table_para(para);
@@ -268,14 +280,6 @@
             layui_table_tree.table_para.para=search_para;
             layui_table_tree.table_load_render();
         },
-        //更新表格的参数
-        update_table_para:function(para){
-            if(para!=null){
-                for(var key in para){
-                    layui_table_tree.table_para[key]=para[key];
-                }
-            }
-        },
         // 展开全部
         expandAll:function(){
             layui_table_tree.tableins.expandAll();
@@ -283,6 +287,81 @@
         //  折叠全部
         foldAll:function(){
             layui_table_tree.tableins.foldAll();
+        },
+
+        //取消复选框 父元素到子元素的联动
+        closeCheckboxParentLinkage:function () {
+            var nullFunc=function(){
+            };
+            layui_table_tree.tableins.__proto__.checkSubCB=nullFunc;
+        },
+        //取消复选框 全部父子联动
+        closeCheckboxAllLinkage:function () {
+            var nullFunc=function(){
+            };
+            layui_table_tree.tableins.__proto__.checkSubCB=nullFunc;
+            layui_table_tree.tableins.__proto__.checkParentCB=nullFunc;
+        },
+
+        //设置点击表格行,进行选中
+        click_line_checked: function () {
+            // 监听行单击事件
+            layui.treeTable.on('row(table_div)', function(obj){
+                var tr=obj.tr;
+                var input= tr.children().eq(0).find("input").next('.layui-form-checkbox');
+                input.click()
+            });
+        },
+
+        //获取当前选中行的数据
+        get_checked_data: function () {
+            return layui_table_tree.tableins.checkStatus()
+        },
+        //获取当前选中行的数据的id
+        get_checked_data_id: function () {
+            var table_data = layui_table_tree.get_checked_data();
+            return paraGetId(table_data);
+        },
+        //要求选中一条数据,且返回id
+        selectOne: function () {
+            var table_data = layui_table_tree.get_checked_data();
+            if (table_data == null) {
+                layer.msg("无法获取选中数据", {icon: 2});
+                return null;
+            }
+            if (table_data.length != 1) {
+                if (table_data.length == 0) {
+                    layer.msg("至少要选中一条数据", {icon: 2});
+                } else {
+                    layer.msg("只能选择一条数据", {icon: 2});
+                }
+                return null;
+            }
+            var one_id = paraGetOneId(table_data);
+            if (one_id == null) {
+                layer.msg("无法获取选中行id", {icon: 2});
+                return null;
+            }
+            return one_id;
+        },
+
+        //要求选中多条数据,且返回id
+        selectMany: function () {
+            var table_data = layui_table_tree.get_checked_data();
+            if (table_data == null) {
+                layer.msg("无法获取选中数据", {icon: 2});
+                return null;
+            }
+            if (table_data.length < 1) {
+                layer.msg("至少要选中一条数据", {icon: 2});
+                return null;
+            }
+            var many_id = paraGetId(table_data);
+            if (many_id == null) {
+                layer.msg("无法获取选中行id", {icon: 2});
+                return null;
+            }
+            return many_id;
         },
     }
 

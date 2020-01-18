@@ -58,6 +58,9 @@
             </button>
             <button class="layui-btn   layui-btn-danger" onclick="table_func.delete()"><i class="layui-icon layui-icon-delete"></i>删除
             </button>
+            <button class="layui-btn   layui-btn-danger" onclick="table_func.set_role()"><i class="layui-icon"></i>设置用户角色
+            </button>
+
         </div>
     </div>
 </script>
@@ -125,8 +128,34 @@
                     });
                 })
             }
-
-        }
+        },
+        //设置角色
+        set_role: function () {
+            var id = layui_table.selectOne();
+            if (id != null) {
+                var open_id=layer.open({
+                    type:2,
+                    title:"设置角色",
+                    shadeClose: true,
+                    shadeClose: true,
+                    shade: 0.3,
+                    area: ['75%', '80%'],
+                    content: "${request.contextPath}/pages/role/module/set_role", //iframe的url
+                    end : function(index, layero){
+                    }
+                })
+               // var  open_id=layer.open({
+               //      title:"调整专业",
+               //      type: 1,
+               //      shadeClose: true,//点击遮罩关闭层
+               //      scrollbar: false,
+               //      skin: 'layui-layer-rim', //加上边框
+               //      area: ['550px', '340px'], //宽高
+               //      content:"${request.contextPath}/pages/role/module/set_role"
+               //  });
+                // window.location.href = "${request.contextPath}/pages/user/add?id=" + id;
+            }
+        },
     }
     $(function () {
         //设置表格的属性值

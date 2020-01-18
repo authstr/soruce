@@ -43,10 +43,7 @@ var enter_event={
     //回车点击事件,触发id为btn_search的按钮的点击事件
     event_search_click:function () {
         enter_event.event_button_click("btn_search")
-    },
-
-
-
+    }
 }
 
 
@@ -305,7 +302,14 @@ function arrayToSelect2(data, key, placeholder) {
     return {data: temp, placeholder: placeholder};
 }
 
-function arrayToSelect2(data, key1, key2, placeholder) {
+//快捷的将查询的数据转换为select2可用的数组,将转换为形如:张三(123456)  李四(计算机专业) 的数据形式
+/*
+    data:要转换的源数据
+    key1:要转换为name前缀的属性值
+    key2:要转换为name括号里信息 的属性值
+    placeholder:要展示的占位符信息
+* */
+function twoArrayToSelect2(data, key1, key2, placeholder) {
     var temp = [];
     $.each(data, function (index, elem) {
         temp.push({id: elem.id, text: elem[key1] + "(" + elem[key2] + ")"});
@@ -313,7 +317,8 @@ function arrayToSelect2(data, key1, key2, placeholder) {
     return {data: temp, placeholder: placeholder};
 }
 
-function postJSON  (url,para,success){
+//以json格式发送post请求.用于在后台有@requestBody注解时
+function postJSON(url,para,success){
     $.ajax({
         type: "POST",
         url: url,
