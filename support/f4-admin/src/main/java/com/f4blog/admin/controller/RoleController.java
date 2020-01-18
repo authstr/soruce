@@ -62,6 +62,11 @@ public class RoleController extends AbstractController {
     }
 
 
+    @RequestMapping("getRoleIdByUserId")
+    public ResponseData getRoleIdByUserId(String userId) {
+        return ResponseData.success(roleService.getRoleIdByUserId(userId));
+    }
+
 
     @RequestMapping("getById")
     public ResponseData getById( Integer id) {

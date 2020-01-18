@@ -363,6 +363,10 @@
             }
             return many_id;
         },
+        //设置选中
+        setChecked:function (ids) {
+            layui_table_tree.tableins.setChecked(ids)
+        }
     }
 
 
@@ -439,6 +443,33 @@
                 btn: ['确定','取消'] //按钮
             },func, function(){});
         },
+        //判断请求返回值,是否有返回值,是否有 code:1 数据,没有进行异常提示
+        ajax_verify:function (o) {
+            if(o==null){
+                layui_layer.error_alert("请求出错!");
+                return false;
+            }
+            if (o.code == 0) {
+                layer.msg(o.message);
+                return true;
+            }else{
+                layui_layer.error_alert(o.message);
+                return true;
+            }
+        },
+        ajax_verify_not_success_hint:function (o) {
+            if(o==null){
+                layui_layer.error_alert("请求出错!");
+                return false;
+            }
+            if (o.code == 0) {
+                return true;
+            }else{
+                layui_layer.error_alert(o.message);
+                return true;
+            }
+        }
+
 
     }
 

@@ -21,6 +21,8 @@ public interface UserService extends IService<BaseUser> {
     @Transactional(rollbackFor=Exception.class)
     Integer addOrEdit(BaseUser model, RequestPara para);
 
+    Boolean saveRoleInfo(Integer userId, Integer[] roleIds);
+
     @Transactional(rollbackFor=Exception.class)
     void delete(Integer[] ids);
 

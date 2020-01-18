@@ -70,6 +70,9 @@ var common_utils={
 
 }
 
+//将ajax()、post()请求时的数组参数视为一个数组,而不是多个数组参数
+jQuery.ajaxSettings.traditional = true;
+
 //form的封装参数数组转为参数字面量
 function paraArrayToLiteral(para) {
     var literal = {};

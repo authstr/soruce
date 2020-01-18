@@ -110,7 +110,7 @@
         //编辑
         edit: function () {
            // 获取选中数据
-            var id =  tableTree_obj.checkStatus()[0].id;
+            var id = layui_table_tree.selectOne();
             if (id != null) {
                 window.location.href = "${request.contextPath}/pages/role/edit?id=" + id;
             }

@@ -8,7 +8,9 @@ import com.f4Blog.basic.web.controller.AbstractController;
 import com.f4blog.admin.service.inter.RoleService;
 import com.f4blog.admin.service.inter.UserService;
 import com.f4blog.model.base.BaseUser;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Map;
 
+@Api("用户管理")
 @RequestMapping("user")
 @RestController
 public class UserController extends AbstractController {
@@ -52,6 +55,17 @@ public class UserController extends AbstractController {
     public ResponseData getById( String id) {
         return ResponseData.success(userService.getById(id),"role_ids",roleService.getRoleIdByUserId(id));
     }
+    @ApiOperation(value="保存用户的角色信息", notes="",httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户id", dataType = "Integer"),
+            @ApiImplicitParam(name = "roleIds", value = "角色id数组", dataType = "Integer[]")
+            })
+    @RequestMapping(value = "saveRoleInfo")
+    public ResponseData saveRoleInfo( Integer userId,Integer[] roleIds) {
+        return ResponseData.success(userService.saveRoleInfo(userId,roleIds));
+    }
+
+
 
 
 

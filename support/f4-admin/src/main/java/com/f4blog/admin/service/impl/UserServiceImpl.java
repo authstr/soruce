@@ -1,5 +1,6 @@
 package com.f4blog.admin.service.impl;
 
+import cn.hutool.core.util.ArrayUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.f4Blog.basic.exception.Assert;
@@ -17,6 +18,7 @@ import com.f4blog.model.base.BaseUser;
 import com.f4blog.model.base.relation.BaseRelationUserRole;
 import com.f4blog.model.utils.ModelUtil;
 import com.f4blog.model.constant.AdminC;
+import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,24 +72,39 @@ public class UserServiceImpl extends BaseServiceImpl<UserDao, BaseUser> implemen
 
         //设置用户的角色
         String[] role_ids=para.getArray("role_ids");
-        if(role_ids!=null){
-            //删除当前用户的角色关联信息
-            Map<String,Object> delete_where=new HashMap();
-            delete_where.put("user_id",id);
-            relationUserRoleService.removeByMap(delete_where);
 
-            //创建角色关联信息并保存
-            List<BaseRelationUserRole> temp=new ArrayList();
-            for(int i=0;i<role_ids.length;i++){
-                BaseRelationUserRole relation=new BaseRelationUserRole();
-                relation.setUser_id(id);
-                relation.setRole_id(Integer.valueOf(role_ids[i]));
-                temp.add(relation);
-            }
-            relationUserRoleService.saveBatch(temp);
+        if(role_ids!=null){
+            Integer[] role_ids_int= (Integer[]) ConvertUtils.convert(role_ids, Integer.class);
+            saveRoleInfo(id,role_ids_int);
         }
 
         return model.getId();
+    }
+
+    /**
+     * 为一个用户保存角色信息
+     * @param userId
+     * @param roleIds
+     * @return
+     */
+    @Override
+    public Boolean saveRoleInfo(Integer userId, Integer[] roleIds){
+        Assert.isTrue( userId!=null,"userId不能为空",true);
+        Assert.isTrue( roleIds!=null,"roleIds不能为空",true);
+            //删除当前用户的角色关联信息
+        Map<String,Object> delete_where=new HashMap();
+        delete_where.put("user_id",userId);
+        relationUserRoleService.removeByMap(delete_where);
+
+        //创建角色关联信息并保存
+        List<BaseRelationUserRole> temp=new ArrayList();
+        for(int i=0;i<roleIds.length;i++){
+            BaseRelationUserRole relation=new BaseRelationUserRole();
+            relation.setUser_id(userId);
+            relation.setRole_id(roleIds[i]);
+            temp.add(relation);
+        }
+        return relationUserRoleService.saveBatch(temp);
     }
 
     /**

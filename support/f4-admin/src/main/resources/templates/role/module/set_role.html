@@ -31,21 +31,13 @@
                     <div class="layui-table-tool-temp">
                         <div style="margin-bottom: -5px">
                             <div class="layui-btn-container " style="float: left;">
-                                <button class="layui-btn " onclick="table_func.add()">
-                                    <i class="layui-icon layui-icon-add-1"></i>
-                                    添加
+                                <button class="layui-btn " onclick="table_func.saveRoleInfo()">
+                                    <i class="layui-icon layui-icon-ok"></i>
+                                    确定
                                 </button>
-                                <button class="layui-btn layui-btn-normal" onclick="table_func.edit()">
-                                    <i class="layui-icon layui-icon-edit"></i>
-                                    编辑
-                                </button>
-                                <button class="layui-btn layui-btn-danger" onclick="table_func.delete()">
-                                    <i class="layui-icon layui-icon-delete"></i>
-                                    删除
-                                </button>
-                                <button class="layui-btn layui-btn-danger" onclick="table_func.delete_relevance()">
-                                    <i class="layui-icon layui-icon-delete"></i>
-                                    删除(包括下级)
+                                <button class="layui-btn layui-btn-normal" onclick="table_func.cancel()">
+                                    <i class="layui-icon layui-icon-close"></i>
+                                    取消
                                 </button>
                             </div>
                             <div class="layui-table-tool-self">
@@ -104,17 +96,25 @@
         search: function () {
             layui_table_tree.search($("#inquire").serialize())
         },
-        //添加
-        add: function () {
-            window.location.href = "${request.contextPath}/pages/role/add";
+        //保存
+        saveRoleInfo: function () {
+            var ids=layui_table_tree.get_checked_data_id();
+            $.getJSON("${request.contextPath}/user/saveRoleInfo", {userId:"${userId!?html}",roleIds:ids}, function (o) {
+                layui_layer.ajax_verify(o);
+                var data=o.data;
+                console.log(o);
+            });
         },
-        //编辑
-        edit: function () {
-            // 获取选中数据
-            var id =  tableTree_obj.checkStatus()[0].id;
-            if (id != null) {
-                window.location.href = "${request.contextPath}/pages/role/edit?id=" + id;
-            }
+        //取消
+        cancel: function () {
+
+        },
+        load:function(){
+            $.getJSON("${request.contextPath}/role/getRoleIdByUserId", {userId:"${userId!?html}"}, function (o) {
+                layui_layer.ajax_verify_not_success_hint(o);
+                var data=o.data;
+                layui_table_tree.setChecked(data);
+            });
         },
         // 展开全部
         expandAll:function(){
@@ -123,38 +123,6 @@
         //  折叠全部
         foldAll:function(){
             layui_table_tree.foldAll();
-        },
-        //删除
-        delete: function () {
-            var id = tableTree_obj.checkStatus()[0].id;
-            if (id != null) {
-                layui_layer.confirm("确定要删除当前角色吗?该角色之下的角色不会被删除",function () {
-                    $.post("${request.contextPath}/role/delete", {ids:id}, function (o) {
-                        if (o.code == 0) {
-                            layer.msg(o.message);
-                            table_func.init();
-                        } else {
-                            layui_layer.error_alert(o.message);
-                        }
-                    });
-                })
-            }
-        },
-        //删除关联
-        delete_relevance: function () {
-            var id = tableTree_obj.checkStatus()[0].id;
-            if (id != null) {
-                layui_layer.confirm("确定要删除当前角色和当前角色下的所有子角色吗?",function () {
-                    $.post("${request.contextPath}/role/delete_chilren", {ids:id}, function (o) {
-                        if (o.code == 0) {
-                            layer.msg(o.message);
-                            table_func.init();
-                        } else {
-                            layui_layer.error_alert(o.message);
-                        }
-                    });
-                })
-            }
         }
     }
     $(function () {
@@ -163,9 +131,13 @@
         //树状表格渲染
         table_func.init();
         //取消 父复选框到子复选框的联动
-        layui_table_tree.closeCheckboxParentLinkage();
+        layui_table_tree.closeCheckboxAllLinkage();
         //设置点击表格行,进行选中
         layui_table_tree.click_line_checked()
+
+        table_func.load();
+        // layui_table_tree.tableins.setChecked(["14","13"])
+
 
     });
 </script>
