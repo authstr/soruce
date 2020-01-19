@@ -17,5 +17,5 @@ public interface RoleDao extends BaseMapper<BaseRole> {
 
     List<BaseRole> getLikeParentIds(Integer id);
 
-    List<String> getRoleIdByUserId(String user_id);
+    List<String> getRoleIdByUserId(String userId);
 }

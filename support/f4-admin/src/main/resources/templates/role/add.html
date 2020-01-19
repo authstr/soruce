@@ -82,48 +82,25 @@
         load: function () {
             $.getJSON("${request.contextPath}/role/getById", {id: $("#id").val()}, function (o) {
                 if (o.code == 0) {
+                    // E.load_group("parent_id","请选择上级角色")
                     $("#form1").setFormValues(o.data);
                 }
             });
-        },
-        load_group:function(label_id,placeholder){
-            var sele="#"+label_id;
-            //清空下拉框
-            // $(sele).empty();
-            $.getJSON("${request.contextPath}/role/getAll",{},function(o){
-                var data=o.data;
-                var count=o.data.length;
-                if(o.code ==0 &&data!=null&&count!=0){
-                    var tmp = [];//用来存储select2内容
-                    $(data).each(function(index, elem){
-                        tmp.push({
-                            text: elem.name,//下拉框内容
-                            id: elem.id //下拉框id
-                        });
-                    });
-                    $(sele).select2({
-                        language: 'zh-CN',
-                        placeholder:placeholder,
-                        data:tmp,
-                    });
-                }else{
-                    $(sele).select2({
-                        language: 'zh-CN',
-                        placeholder:"没有查询到数据",
-                        data:null,
-                    });
-                }
-            });
         }
+
     }
     $(function () {
         //回车点击事件 保存
         enter_event.event_save_click();
+        $.ajaxSettings.async=false;
         var id = $("#id").val()
+        load.load_select2("parent_id","请选择上级角色","${request.contextPath}/role/getAll",{exclude_id:'${id!?html}'})
         if (id != null && id != "") {
             E.load();
+        }else{
+            // E.load_group("parent_id","请选择上级角色")
         }
-        E.load_group("parent_id","请选择上级角色")
+
     });
 </script>
 <#include "../common/footer-inner.html">

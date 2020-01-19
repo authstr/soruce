@@ -308,8 +308,10 @@
             // 监听行单击事件
             layui.treeTable.on('row(table_div)', function(obj){
                 var tr=obj.tr;
-                var input= tr.children().eq(0).find("input").next('.layui-form-checkbox');
+                var input= tr.children().eq(0).find("input").next('.layui-form-checkbox')
+                var input_radio= tr.children().eq(0).find("input").next('.layui-form-radio');
                 input.click()
+                input_radio.click();
             });
         },
 

@@ -11,7 +11,7 @@
 <!--最外面的灰底框,用于与ifram区别开-->
 <div class="col-xs-12 lightgray_div">
     <!--白底框-->
-    <div class="col-xs-12 white_div">
+    <div class="col-xs-12 white_div" >
         <!--搜索框-->
         <div class="col-xs-12 search_div">
             <div class="input-group g-fr">
@@ -72,8 +72,8 @@
     //树状表格 表头
     var cols = [
         {type: 'radio'}
-        , {field: 'name', title: '角色名称'}
-        , {field: 'code', title: '角色别名'}
+        , {field: 'name', width:"25%" ,title: '角色名称',style:' overflow: hidden;text-overflow:ellipsis;white-space: nowrap;'}
+        , {field: 'code',width:"15%", title: '角色别名'}
         // , {field: 'parent_ids', title: '父级'}
         , {field: 'orderno', title: '排序号'}
         , {field: 'level', title: '层级'}
@@ -112,7 +112,7 @@
            // 获取选中数据
             var id = layui_table_tree.selectOne();
             if (id != null) {
-                window.location.href = "${request.contextPath}/pages/role/edit?id=" + id;
+                window.location.href = "${request.contextPath}/pages/role/add?id=" + id;
             }
         },
         // 展开全部
@@ -125,7 +125,7 @@
         },
         //删除
         delete: function () {
-            var id = tableTree_obj.checkStatus()[0].id;
+            var id = layui_table_tree.selectOne();
             if (id != null) {
                 layui_layer.confirm("确定要删除当前角色吗?该角色之下的角色不会被删除",function () {
                     $.post("${request.contextPath}/role/delete", {ids:id}, function (o) {
@@ -141,7 +141,7 @@
         },
         //删除关联
         delete_relevance: function () {
-            var id = tableTree_obj.checkStatus()[0].id;
+            var id =layui_table_tree.selectOne();
             if (id != null) {
                 layui_layer.confirm("确定要删除当前角色和当前角色下的所有子角色吗?",function () {
                     $.post("${request.contextPath}/role/delete_chilren", {ids:id}, function (o) {
@@ -159,6 +159,8 @@
     $(function () {
         //回车点击事件 搜索
         enter_event.event_search_click();
+        //设置点击表格行,进行选中
+        layui_table_tree.click_line_checked()
         table_func.init();
     });
 </script>

@@ -138,10 +138,12 @@
                     title:"设置角色",
                     shadeClose: true,
                     shadeClose: true,
-                    shade: 0.3,
-                    area: ['75%', '80%'],
-                    content: "${request.contextPath}/pages/role/module/set_role", //iframe的url
+                    shade: 0.5,
+                    area: ['90%', '90%'],
+                    content: "${request.contextPath}/pages/role/module/set_role?userId="+id,
+                    // content: "${request.contextPath}/pages/role/module/set_role",
                     end : function(index, layero){
+                        table_func.search();
                     }
                 })
                // var  open_id=layer.open({

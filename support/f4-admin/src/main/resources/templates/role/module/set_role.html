@@ -65,8 +65,8 @@
     var cols = [
         // {type: 'checkbox'}
         {field: 'id', title: 'id', sort: true, type: 'checkbox', fixed: 'left'}
-        , {field: 'name', title: '角色名称'}
-        , {field: 'code', title: '角色别名'}
+        , {field: 'name', width:"25%" ,title: '角色名称',style:' overflow: hidden;text-overflow:ellipsis;white-space: nowrap;'}
+        , {field: 'code',width:"15%", title: '角色别名'}
         // , {field: 'parent_ids', title: '父级'}
         , {field: 'orderno', title: '排序号'}
         , {field: 'level', title: '层级'}
@@ -102,12 +102,13 @@
             $.getJSON("${request.contextPath}/user/saveRoleInfo", {userId:"${userId!?html}",roleIds:ids}, function (o) {
                 layui_layer.ajax_verify(o);
                 var data=o.data;
-                console.log(o);
+                table_func.cancel();
             });
         },
         //取消
         cancel: function () {
-
+            var index=parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
         },
         load:function(){
             $.getJSON("${request.contextPath}/role/getRoleIdByUserId", {userId:"${userId!?html}"}, function (o) {
@@ -134,11 +135,7 @@
         layui_table_tree.closeCheckboxAllLinkage();
         //设置点击表格行,进行选中
         layui_table_tree.click_line_checked()
-
         table_func.load();
-        // layui_table_tree.tableins.setChecked(["14","13"])
-
-
     });
 </script>
 <#include "../../common/footer-inner.html">

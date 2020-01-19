@@ -34,9 +34,7 @@
         SELECT a.id FROM base_role a
         join base_relation_user_role r_user_role on r_user_role.role_id=a.id
         where 1=1
-        <if test="user_id != null and user_id != ''">
-            and r_user_role.user_id = ${user_id}
-        </if>
+          and r_user_role.user_id = ${userId}
     </select>
 
 </mapper>

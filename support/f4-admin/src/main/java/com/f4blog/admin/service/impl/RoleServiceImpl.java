@@ -15,6 +15,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -211,8 +212,9 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleDao, BaseRole> implemen
     }
 
     @Override
-    public List<String> getRoleIdByUserId(String user_id){
-        return roleDao.getRoleIdByUserId(user_id);
+    public List<String> getRoleIdByUserId(String userId){
+        Assert.isTrue(StringUtils.hasText(userId),BaseExceptionEnum.PARA_ERROR);
+        return roleDao.getRoleIdByUserId(userId);
     }
 
 }

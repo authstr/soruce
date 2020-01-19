@@ -9,6 +9,8 @@
     padding-left: 0px;
     padding-right: 0px;
     height: 100%;
+    overflow-y: auto;
+    overflow-x: auto
 }
 
 .search_div {
@@ -48,4 +50,7 @@
 
 .form-radio-label{
     margin-right: 10px;
+}
+.table_tree_omit{
+    overflow: hidden;text-overflow:ellipsis;white-space: nowrap;
 }
