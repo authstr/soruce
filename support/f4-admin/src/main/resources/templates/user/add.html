@@ -108,7 +108,7 @@
         //回车点击事件 保存
         enter_event.event_save_click();
         $.ajaxSettings.async=false;
-        load.load_select2("role_ids","请选择所属角色","${request.contextPath}/role/getAll",{})
+        select2_utils.load_select2("role_ids","请选择所属角色","${request.contextPath}/role/getAll",{})
         var id = $("#id").val()
         if (id != null && id != "") {
             E.load();

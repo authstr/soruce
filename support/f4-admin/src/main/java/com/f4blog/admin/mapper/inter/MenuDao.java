@@ -17,4 +17,6 @@ public interface MenuDao extends BaseMapper<BaseMenu> {
     List<Map> getAll(String name,String exclude_id);
 
     List<BaseMenu> getLikeParentIds(Integer id);
+
+    List<String> getMenuIdByRoleId(String roleId);
 }

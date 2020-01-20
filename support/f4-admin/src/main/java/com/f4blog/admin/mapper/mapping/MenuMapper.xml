@@ -30,6 +30,14 @@
         </if>
     </select>
 
+
+    <select id="getMenuIdByRoleId" resultType="string">
+        SELECT a.id FROM base_menu a
+        join base_relation_role_menu r_role_menu on r_role_menu.menu_id=a.id
+        where 1=1
+          and r_role_menu.role_id = ${roleId}
+    </select>
+
 </mapper>
 
 

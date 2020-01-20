@@ -5,8 +5,6 @@
 * @2020年1月12日12:31:16
 * */
 var load={
-    //以select2加载一个下拉框
-    //label_id 下拉框的id
     /*
     * 以select2加载一个下拉框
     * label_id              下拉框的id
@@ -22,6 +20,7 @@ var load={
             var data=o.data;
             var count=o.data.length;
             if(o.code ==0 &&data!=null&&count!=0){
+
                 var tmp = [];//用来存储select2内容
                 $(data).each(function(index, elem){
                     tmp.push({
@@ -29,11 +28,8 @@ var load={
                         id: elem.id //下拉框id
                     });
                 });
-                $(sele).select2({
-                    language: 'zh-CN',
-                    placeholder:placeholder,
-                    data:tmp,
-                });
+                var select2_data=select2_utils.arrayToSelect2(data,"name",placeholder)
+                $(sele).select2(select2_data);
             }else{
                 $(sele).select2({
                     language: 'zh-CN',
@@ -42,6 +38,8 @@ var load={
                 });
             }
         });
-    }
+    },
+
+
 }
 

@@ -88,6 +88,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserDao, BaseUser> implemen
      * @return
      */
     @Override
+    @Transactional
     public Boolean saveRoleInfo(Integer userId, Integer[] roleIds){
         Assert.isTrue( userId!=null,"userId不能为空",true);
         Assert.isTrue( roleIds!=null,"roleIds不能为空",true);

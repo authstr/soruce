@@ -7,6 +7,8 @@ import com.f4Blog.basic.web.controller.AbstractController;
 import com.f4blog.admin.service.inter.RoleService;
 import com.f4blog.model.base.BaseRole;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,15 +69,21 @@ public class RoleController extends AbstractController {
         return ResponseData.success(roleService.getRoleIdByUserId(userId));
     }
 
+    @ApiOperation(value="保存角色的菜单信息", notes="",httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "roleId", value = "角色id", dataType = "Integer"),
+            @ApiImplicitParam(name = "menuIds", value = "菜单id数组", dataType = "Integer[]")
+    })
+    @RequestMapping(value = "saveMenuInfo")
+    public ResponseData saveMenuInfo( Integer roleId,Integer[] menuIds) {
+        return ResponseData.success(roleService.saveMenuInfo(roleId,menuIds));
+    }
+
 
     @RequestMapping("getById")
     public ResponseData getById( Integer id) {
         return ResponseData.success(roleService.getById(id));
     }
-
-
-
-
 
 }
 

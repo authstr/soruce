@@ -46,6 +46,78 @@ var enter_event={
     }
 }
 
+var select2_utils={
+    //在没有查询到数据时,使用的select2参数
+    null_data:{
+        language: 'zh-CN',
+        placeholder:"没有查询到数据",
+        data:null,
+    },
+    /*
+    * 以select2加载一个下拉框
+    * label_id              下拉框的id
+    * placeholder           要显示的提示文本
+    * url                   请求的url
+    * para                  请求附带的参数
+    * key1                  展示返回数据的那个字段
+    * key2                  额外展示返回数据的那个字段
+    * key_id                id使用返回数据的那个字段
+    * */
+    load_select2_key_id:function (label_id,placeholder,url,para,key1,key2,key_id) {
+        var sele="#"+label_id;
+        $.getJSON(url,para!=null?para:{},function(o){
+            var data=o.data;
+            var count=o.data.length;
+            if(o.code ==0 &&data!=null&&count!=0){
+                var select2_data=select2_utils.arrayToSelect2_key2_id(data,key_id,key1,key2,placeholder)
+                $(sele).select2(select2_data);
+            }else{
+                $(sele).select2(select2_utils.null_data);
+            }
+        });
+    },
+
+    load_select2_key:function (label_id,placeholder,url,para,key1,key2) {
+        return select2_utils.load_select2_key_id(label_id,placeholder,url,para,key1,key2,"id");
+    },
+    load_select2_key2:function (label_id,placeholder,url,para,key2) {
+        return select2_utils.load_select2_key_id(label_id,placeholder,url,para,"name",key2,"id");
+    },
+    load_select2:function (label_id,placeholder,url,para) {
+        return select2_utils.load_select2_key_id(label_id,placeholder,url,para,"name",null,"id");
+    },
+
+
+
+    /*
+       快捷的将查询的数据转换为select2可用的数组,将转换为形如:张三(123456)  李四(计算机专业) 的数据形式
+       data:要转换的源数据
+       key_id: 要转换为id的 属性
+       key1:要转换为name前缀的属性值
+       key2:要转换为name括号里信息 的属性值
+       placeholder:要展示的占位符信息
+    * */
+    arrayToSelect2_key2_id:function (data,key_id, key1, key2, placeholder) {
+        var temp = [];
+        $.each(data, function (index, elem) {
+            var value=elem[key1];
+            if(key2!=null){
+                value=value + "(" + elem[key2] + ")";
+            }
+            temp.push({id: elem[key_id], text: value});
+        })
+        return {language: 'zh-CN',data: temp, placeholder: placeholder};
+    },
+    //快捷的将查询的数据转换为select2可用的数组,仅适用于简单的转换
+    arrayToSelect2:function(data, key, placeholder) {
+        return select2_utils.arrayToSelect2_key2_id(data,"id",key,null,placeholder)
+    },
+    //快捷的将查询的数据转换为select2可用的数组,仅适用于简单的转换
+    arrayToSelect2_key:function(data, key1,key2, placeholder) {
+        return select2_utils.arrayToSelect2_key2_id(data,"id",key1,key2,placeholder)
+    }
+
+}
 
 var common_utils={
     status_map:{
@@ -296,29 +368,7 @@ function rodio_chick(lab) {
 
 })(jQuery);
 
-//快捷的将查询的数据转换为select2可用的数组,仅适用于简单的转换
-function arrayToSelect2(data, key, placeholder) {
-    var temp = [];
-    $.each(data, function (index, elem) {
-        temp.push({id: elem.id, text: elem[key]});
-    })
-    return {data: temp, placeholder: placeholder};
-}
 
-//快捷的将查询的数据转换为select2可用的数组,将转换为形如:张三(123456)  李四(计算机专业) 的数据形式
-/*
-    data:要转换的源数据
-    key1:要转换为name前缀的属性值
-    key2:要转换为name括号里信息 的属性值
-    placeholder:要展示的占位符信息
-* */
-function twoArrayToSelect2(data, key1, key2, placeholder) {
-    var temp = [];
-    $.each(data, function (index, elem) {
-        temp.push({id: elem.id, text: elem[key1] + "(" + elem[key2] + ")"});
-    })
-    return {data: temp, placeholder: placeholder};
-}
 
 //以json格式发送post请求.用于在后台有@requestBody注解时
 function postJSON(url,para,success){
@@ -330,7 +380,6 @@ function postJSON(url,para,success){
         dataType: "json",
         success:success
     });
-
 };
 
 

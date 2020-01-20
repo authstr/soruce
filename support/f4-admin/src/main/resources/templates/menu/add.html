@@ -147,8 +147,9 @@
     $(function () {
         //回车点击事件 保存
         enter_event.event_save_click();
+        $.ajaxSettings.async=false;
         E.load_orderno('orderno',"请选择排序号")
-        load.load_select2("parent_id","请选择父菜单","${request.contextPath}/menu/getAll",{})
+        select2_utils.load_select2("parent_id","请选择父菜单","${request.contextPath}/menu/getAll",{})
         var id = $("#id").val()
         if (id != null && id != "") {
             E.load();

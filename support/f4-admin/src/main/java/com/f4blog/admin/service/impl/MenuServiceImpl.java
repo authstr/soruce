@@ -16,6 +16,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -185,6 +186,12 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuDao, BaseMenu> implemen
             deleteAllChild(baseMenu);
             Assert.isTrue(super.removeById(id),"第"+(i+1)+"条数据删除失败!本次操作无效");
         }
+    }
+
+    @Override
+    public List<String> getMenuIdByRoleId(String roleId){
+        Assert.isTrue(StringUtils.hasText(roleId),BaseExceptionEnum.PARA_ERROR);
+        return menuDao.getMenuIdByRoleId(roleId);
     }
 
 }

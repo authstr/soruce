@@ -6,14 +6,22 @@
 
 
     <select id="query" resultType="map">
-        SELECT a.* FROM base_role a where 1=1
+        SELECT a.*,group_concat(menu.name) as menu_info FROM base_role a
+        left join base_relation_role_menu r_role_menu on r_role_menu.role_id=a.id
+        left join base_menu menu on menu.id=r_role_menu.menu_id
+        where 1=1
         <if test="name != null and name != ''">
            and a.name like CONCAT('%',#{name},'%')
         </if>
+
+        GROUP BY a.id
     </select>
 
     <select id="getAll" resultType="map">
-        SELECT a.* FROM base_role a where 1=1
+        SELECT a.*,group_concat(menu.name) as menu_info FROM base_role a
+        left join base_relation_role_menu r_role_menu on r_role_menu.role_id=a.id
+        left join base_menu menu on menu.id=r_role_menu.menu_id
+        where 1=1
         <if test="name != null and name != ''">
             and a.name like CONCAT('%',#{name},'%')
         </if>
@@ -21,6 +29,8 @@
             and !( a.parent_ids LIKE CONCAT('%$[',#{exclude_id},'$]%') escape '$')
             and a.id != #{exclude_id}
         </if>
+
+        GROUP BY a.id
     </select>
 
     <select id="getLikeParentIds" resultType="com.f4blog.model.base.BaseRole">

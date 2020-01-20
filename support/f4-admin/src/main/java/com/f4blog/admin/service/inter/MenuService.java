@@ -26,4 +26,6 @@ public interface MenuService extends IService<BaseMenu> {
 
     @Transactional(rollbackFor=Exception.class)
     void deleteChildren(Integer[] ids);
+
+    List<String> getMenuIdByRoleId(String roleId);
 }

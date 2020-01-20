@@ -8,8 +8,11 @@ import com.f4Blog.basic.exception.BaseExceptionEnum;
 import com.f4Blog.basic.reqres.request.RequestPara;
 import com.f4Blog.basic.web.service.BaseServiceImpl;
 import com.f4blog.admin.mapper.inter.RoleDao;
+import com.f4blog.admin.service.inter.RelationRoleMenuService;
 import com.f4blog.admin.service.inter.RoleService;
 import com.f4blog.model.base.BaseRole;
+import com.f4blog.model.base.relation.BaseRelationRoleMenu;
+import com.f4blog.model.base.relation.BaseRelationUserRole;
 import com.f4blog.model.utils.ModelUtil;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +31,9 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleDao, BaseRole> implemen
 
     @Autowired
     RoleDao roleDao;
+
+    @Autowired
+    RelationRoleMenuService relationRoleMenuService;
 
     @Override
     public Page query(@Param("page") Page page, String name) {
@@ -209,6 +217,33 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleDao, BaseRole> implemen
             deleteAllChild(baseRole);
             super.removeById(id);
         }
+    }
+
+    /**
+     * 为一个角色保存菜单信息
+     * @param roleId
+     * @param menuIds
+     * @return
+     */
+    @Override
+    @Transactional
+    public Boolean saveMenuInfo(Integer roleId, Integer[] menuIds){
+        Assert.isTrue( roleId!=null,"roleId不能为空",true);
+        Assert.isTrue( menuIds!=null,"menuIds不能为空",true);
+        //删除当前角色的菜单关联信息
+        Map<String,Object> delete_where=new HashMap();
+        delete_where.put("role_id",roleId);
+        relationRoleMenuService.removeByMap(delete_where);
+
+        //创建角色关联信息并保存
+        List<BaseRelationRoleMenu> temp=new ArrayList();
+        for(int i=0;i<menuIds.length;i++){
+            BaseRelationRoleMenu relation=new BaseRelationRoleMenu();
+            relation.setRole_id(roleId);
+            relation.setMenu_id(menuIds[i]);
+            temp.add(relation);
+        }
+        return relationRoleMenuService.saveBatch(temp);
     }
 
     @Override

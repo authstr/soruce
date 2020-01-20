@@ -47,6 +47,8 @@
                                     <i class="layui-icon layui-icon-delete"></i>
                                     删除(包括下级)
                                 </button>
+                                <button class="layui-btn   layui-btn-normal" onclick="table_func.set_menu()"><i class="layui-icon"></i>设置角色菜单
+                                </button>
                             </div>
                             <div class="layui-table-tool-self">
                                 <div class="layui-inline" title="展开所有" lay-event="LAYTABLE_COLS" onclick="table_func.expandAll()" >
@@ -78,7 +80,8 @@
         , {field: 'orderno', title: '排序号'}
         , {field: 'level', title: '层级'}
         , {field: 'remark', title: '备注'}
-        , {field: 'remark', title: '备注'}
+        , {field: 'menu_info', title: '菜单'}
+
         , {
             field: 'gmt_create', title: '创建时间'
             , templet: function (col) {
@@ -154,7 +157,24 @@
                     });
                 })
             }
-        }
+        },
+        set_menu:function(){
+            var id = layui_table_tree.selectOne();
+            if (id != null) {
+                layer.open({
+                    type:2,
+                    title:"设置菜单",
+                    shadeClose: true,
+                    shadeClose: true,
+                    shade: 0.5,
+                    area: ['90%', '90%'],
+                    content: "${request.contextPath}/pages/menu/module/set_menu?roleId="+id,
+                    end : function(index, layero){
+                        table_func.search();
+                    }
+                })
+            }
+        },
     }
     $(function () {
         //回车点击事件 搜索
