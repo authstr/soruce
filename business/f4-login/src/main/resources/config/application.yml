@@ -1,6 +1,7 @@
 server:
   port: 8011
-
+  servlet:
+    context-path: /${spring.application.name}
 eureka:
   client:
     serviceUrl: #注册中心的注册地址
