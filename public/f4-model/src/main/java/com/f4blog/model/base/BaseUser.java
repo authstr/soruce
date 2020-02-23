@@ -19,6 +19,9 @@ public class BaseUser  extends BaseModel {
 	@Length(min=6,max = 16,message = "用户名需为6-16字符")
 	private String username;
 
+	//盐值
+	private String salt;
+
 	//密码
 	@NotEmpty(message = "密码不能为空")
 	private String password;

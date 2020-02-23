@@ -7,6 +7,7 @@ import com.f4Blog.basic.exception.Assert;
 import com.f4Blog.basic.exception.BaseExceptionEnum;
 import com.f4Blog.basic.exception.ServiceException;
 import com.f4Blog.basic.reqres.request.RequestPara;
+import com.f4Blog.basic.shiro.ShiroKit;
 import com.f4Blog.basic.util.Md5Salt;
 import com.f4Blog.basic.web.service.BaseServiceImpl;
 import com.f4blog.admin.mapper.inter.RelationUserRoleDao;
@@ -16,6 +17,7 @@ import com.f4blog.admin.service.inter.UserService;
 import com.f4blog.admin.util.MsgEnum;
 import com.f4blog.model.base.BaseUser;
 import com.f4blog.model.base.relation.BaseRelationUserRole;
+import com.f4blog.model.constant.BaseC;
 import com.f4blog.model.utils.ModelUtil;
 import com.f4blog.model.constant.AdminC;
 import org.apache.commons.beanutils.ConvertUtils;
@@ -80,6 +82,36 @@ public class UserServiceImpl extends BaseServiceImpl<UserDao, BaseUser> implemen
 
         return model.getId();
     }
+
+    @Transactional(rollbackFor=Exception.class)
+//    @Override
+    public void addUser(BaseUser model,Integer user_type,RequestPara  para){
+        BaseUser user_temp=getByUsername(model.getUsername());
+        Assert.isTrue(user_temp==null,MsgEnum.USER_EXIST);
+        // 获取盐值和加密后的密码
+        String salt = ShiroKit.getRandomSalt(5);
+        String password = ShiroKit.md5(model.getPassword(), salt);
+
+        //保存
+        model.setSalt(salt);
+        model.setPassword(password);
+        model.setUser_type(user_type);
+        model.setStatus(BaseC.COMMON_STATUS_NORMAL);
+        super.save(model);
+
+        //设置用户的角色
+        String[] role_ids=para.getArray("role_ids");
+        if(role_ids!=null){
+            Integer[] role_ids_int= (Integer[]) ConvertUtils.convert(role_ids, Integer.class);
+            saveRoleInfo(model.getId(),role_ids_int);
+        }
+    }
+
+    @Override
+    public void register(BaseUser model,RequestPara  para){
+        addUser(model,AdminC.USER_TYPE_COMMON,para);
+    }
+
 
     /**
      * 为一个用户保存角色信息

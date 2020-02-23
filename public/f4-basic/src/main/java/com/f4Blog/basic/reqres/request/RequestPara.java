@@ -1,7 +1,7 @@
 package com.f4Blog.basic.reqres.request;
 
 
-import com.f4Blog.basic.reqres.utils.WebUntil;
+import com.f4Blog.basic.reqres.utils.WebUtils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +31,7 @@ public class RequestPara {
 
 
     public static RequestPara instance(){
-        RequestPara para=new RequestPara(WebUntil.getRequest());
+        RequestPara para=new RequestPara(WebUtils.getRequest());
         return para;
     }
 

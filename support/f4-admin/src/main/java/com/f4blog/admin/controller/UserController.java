@@ -45,6 +45,14 @@ public class UserController extends AbstractController {
         return ResponseData.success(userService.addOrEdit(user,para));
     }
 
+    @ApiOperation(value="用户注册", notes="")
+    @RequestMapping(value = "register",method = RequestMethod.POST )
+    public ResponseData register(@Valid  BaseUser user,HttpServletRequest request) {
+        RequestPara para=new RequestPara(request);
+        userService.register(user,para);
+        return ResponseData.success();
+    }
+
     @RequestMapping(value = "delete",method = RequestMethod.POST)
     public ResponseData delete(Integer[] ids) {
         userService.delete(ids);

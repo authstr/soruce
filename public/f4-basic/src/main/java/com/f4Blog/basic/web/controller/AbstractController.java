@@ -1,29 +1,24 @@
 package com.f4Blog.basic.web.controller;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.f4Blog.basic.exception.BaseExceptionEnum;
 import com.f4Blog.basic.exception.ErrorException;
 import com.f4Blog.basic.exception.ExceptionEnumInterface;
 import com.f4Blog.basic.exception.ServiceException;
 import com.f4Blog.basic.reqres.response.ErrorResponseData;
+import com.f4Blog.basic.reqres.utils.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.WebRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.UnexpectedTypeException;
 
 
 /**
@@ -35,7 +30,51 @@ import javax.validation.UnexpectedTypeException;
 @Component
 public class AbstractController {
 
+	/**
+	 *重定向 关键词
+	 */
+	public static final String REDIRECT = "redirect:";
+	/**
+	 * 转发关键词
+	 */
+	public static final String FORWARD = "forward:";
+
+
 	protected Logger log = LoggerFactory.getLogger(this.getClass());
+
+	/**
+	 * 获取request对象
+	 * @return
+	 */
+	public HttpServletRequest getHttpServletRequest() {
+		return WebUtils.getRequest();
+	}
+
+	/**
+	 * 获取response对象
+	 * @return
+	 */
+	public HttpServletResponse getHttpServletResponse() {
+		return WebUtils.getResponse();
+	}
+
+	/**
+	 * 从request获取指定name的值
+	 * @param name
+	 * @return
+	 */
+	public String getPara(String name) {
+		return WebUtils.getRequest().getParameter(name);
+	}
+
+	/**
+	 * 设置一个键值对到request参数里
+	 * @param name
+	 * @param value
+	 */
+	protected void setAttr(String name, Object value) {
+		WebUtils.getRequest().setAttribute(name, value);
+	}
 
 	/**
 	 * 捕获其他异常

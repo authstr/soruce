@@ -4,7 +4,7 @@ import com.f4Blog.basic.exception.BaseExceptionEnum;
 import com.f4Blog.basic.exception.ExceptionEnumInterface;
 
 public enum MsgEnum implements ExceptionEnumInterface {
-    USER_EXIST("301","用户已存在"),
+    USER_EXIST("301","用户已注册"),
     ENCRYPT_ERROR("311","加密出错!");
 
     private String code;

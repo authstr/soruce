@@ -2,9 +2,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.30.106:3306/f4blog?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=CTT
+    url: jdbc:mysql://rm-bp18c06bj1lnqs9z2to.mysql.rds.aliyuncs.com:3306/f4blog?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone = GMT
     username: authstr
-    password: 15236307900
+    password: Z5m5086148
 
 
 

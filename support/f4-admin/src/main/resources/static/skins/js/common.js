@@ -18,7 +18,7 @@ Date.prototype.format = function (format) {
 };
 
 var enter_event={
-    //回车点击事件,不做任何处理
+    //回车事件,不做任何处理
     event_null:function () {
         $(document).keyup(function (e) {
             if (e.keyCode == 13) {
@@ -26,7 +26,7 @@ var enter_event={
             }
         });
     },
-    //回车点击事件,触发指定按钮的点击
+    //回车事件,触发指定按钮的点击
     event_button_click:function (button_id) {
         document.onkeydown = function(e){
             var ev = document.all ? window.event : e;
@@ -36,11 +36,11 @@ var enter_event={
             }
         }
     },
-    //回车点击事件,触发id为btn_save的按钮的点击事件
+    //回车事件,触发id为btn_save的按钮的点击事件
     event_save_click:function () {
         enter_event.event_button_click("btn_save")
     },
-    //回车点击事件,触发id为btn_search的按钮的点击事件
+    //回车事件,触发id为btn_search的按钮的点击事件
     event_search_click:function () {
         enter_event.event_button_click("btn_search")
     }
