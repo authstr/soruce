@@ -54,19 +54,17 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleDao, BaseRole> implemen
     public void addOrEdit(BaseRole model, RequestPara para) {
         Assert.isTrue(super.isUnique(model,"name"),"角色名称不能重复");
 
-        BaseRole oldModel=super.getById(model.getId());
-
         //设置 parent_ids属性值和 level属性值
         setParentIds(model);
 
-        //在进行修改时,更新子角色
-        if(!ModelUtil.isNew(model)){
-            updataAllChildParentIdsForEdit(oldModel,model);
-        }
-
+        //新增的数据直接保存
         if(ModelUtil.isNew(model)){
             super.saveOrUpdate(model);
         }else{
+            //在进行修改时,更新子角色
+            BaseRole oldModel=super.getById(model.getId());
+            updataAllChildParentIdsForEdit(oldModel,model);
+            //完整更新
             super.updateIntact(model);
         }
     }
@@ -78,12 +76,12 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleDao, BaseRole> implemen
      */
     public void setParentIds(BaseRole model){
         Assert.isTrue(model!=null,BaseExceptionEnum.PARA_ERROR);
-        BaseRole oldModel=super.getById(model.getId());
         Integer parent_id=model.getParent_id();
 
-        //如果修改了父角色,验证设置的父对象是否合法,不能将自身的子对象设置为自己的父对象
         if(model.getParent_id()!=null){
+            //如果修改了父角色,验证设置的父对象是否合法,不能将自身的子对象设置为自己的父对象
             if(!ModelUtil.isNew(model)){
+                BaseRole oldModel=super.getById(model.getId());
                 Assert.isTrue(oldModel!=null,BaseExceptionEnum.PARA_ERROR);
                 String old_parent_ids=oldModel.getParent_ids();
                 List<BaseRole> roles=roleDao.getLikeParentIds(oldModel.getId());
@@ -92,11 +90,13 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleDao, BaseRole> implemen
                 }
             }
             //获取父角色的parent_ids
+            //父角色的parent_ids + 父角色的id = 当前角色的parent_ids
             BaseRole parentModel=super.getById(parent_id);
             Assert.isTrue(parentModel!=null,BaseExceptionEnum.PARA_ERROR);
             model.setParent_ids(parentModel.getParent_ids()+"["+model.getParent_id()+"],");
 
             //设置层级
+            //父角色的层级 + 1 = 当前角色的层级
             int level=0;
             if( parentModel.getLevel()!=null){
                 level = parentModel.getLevel();
@@ -131,7 +131,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleDao, BaseRole> implemen
          * A1,A2,A21三个子级元素都有父级元素 [A],[P],
          * 将A的所有父级加上A本身,就是所有子级的公共父级元素
          * */
-        String oldPcodesPrefix = oldRole.getParent_ids() + "[" + oldRole.getId() + "],";
+        String oldPidsPrefix = oldRole.getParent_ids() + "[" + oldRole.getId() + "],";
 
         //遍历所有子级对象
         for(BaseRole role:roles){
@@ -141,12 +141,12 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleDao, BaseRole> implemen
             A21除了有公共的[A],[P],父级外,还有一个父级[A2]
             角色的所有父级信息是按层级顺序排的,截去前面的公共父级,后面的就是非公共父级元素信息
             * */
-            String oldPcodesSuffix = role.getParent_ids().substring(oldPcodesPrefix.length());
+            String oldPidsSuffix = role.getParent_ids().substring(oldPidsPrefix.length());
             /*
             创建当前子角色新的父级元素信息
             N的所有父级元素 + N本身 +当前角色非公共父级元素信息 = 新的所有父级元素信息
             * */
-            String role_parent_ids = newRole.getParent_ids() + "[" + newRole.getId() + "]," + oldPcodesSuffix;
+            String role_parent_ids = newRole.getParent_ids() + "[" + newRole.getId() + "]," + oldPidsSuffix;
 
             role.setParent_ids(role_parent_ids);
             //更新层级数,角色的父级元素数量+1
