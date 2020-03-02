@@ -54,14 +54,7 @@
 
         <dependency>
             <groupId>F4Blog</groupId>
-            <artifactId>f4-model</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>F4Blog</groupId>
-            <artifactId>f4-basic</artifactId>
+            <artifactId>f4-auth</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

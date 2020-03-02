@@ -1,9 +1,5 @@
 package com.f4blog.login.controller;
 
-import com.f4blog.model.base.BaseUser;
-import com.f4blog.login.mapper.UserDao;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController

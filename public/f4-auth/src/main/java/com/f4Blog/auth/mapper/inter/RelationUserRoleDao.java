@@ -1,4 +1,4 @@
-package com.f4blog.admin.mapper.inter;
+package com.f4Blog.auth.mapper.inter;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.f4blog.model.base.relation.BaseRelationUserRole;

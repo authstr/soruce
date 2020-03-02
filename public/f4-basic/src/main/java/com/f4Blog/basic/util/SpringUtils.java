@@ -28,7 +28,13 @@ public class SpringUtils implements ApplicationContextAware {
     }
 
     public static Object getBean(String beanId) {
+        assertApplicationContext();
         return SpringUtils.getBean(Object.class, beanId);
+    }
+
+    public static <T> T getBean(Class<T> requiredType) {
+        assertApplicationContext();
+        return applicationContext.getBean(requiredType);
     }
 
     public static <T> T getBean(Class<T> clazz, String beanId) throws ClassCastException {
@@ -39,6 +45,12 @@ public class SpringUtils implements ApplicationContextAware {
         Object bean = null;
         bean = context.getBean(beanId);
         return (T)bean;
+    }
+
+    private static void assertApplicationContext() {
+        if (applicationContext == null) {
+            throw new RuntimeException("applicaitonContext属性为null,请检查是否注入了SpringUtils!");
+        }
     }
 }
 

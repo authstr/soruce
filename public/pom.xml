@@ -17,6 +17,7 @@
     <modules>
         <module>f4-model</module>
         <module>f4-basic</module>
+        <module>f4-auth</module>
     </modules>
 
 </project>

@@ -1,10 +1,10 @@
 package com.f4blog.admin.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.f4Blog.auth.service.inter.MenuService;
 import com.f4Blog.basic.reqres.request.RequestPara;
 import com.f4Blog.basic.reqres.response.ResponseData;
 import com.f4Blog.basic.web.controller.AbstractController;
-import com.f4blog.admin.service.inter.MenuService;
 import com.f4blog.model.base.BaseMenu;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

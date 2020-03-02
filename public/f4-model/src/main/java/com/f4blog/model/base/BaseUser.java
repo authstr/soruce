@@ -27,7 +27,7 @@ public class BaseUser  extends BaseModel {
 	private String password;
 
 	//	性别
-	private String sex_id;
+	private Integer sex_id;
 
 	//邮箱
 	private String email;

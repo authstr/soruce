@@ -1,22 +1,24 @@
-package com.f4blog.admin.mapper.inter;
+package com.f4Blog.auth.mapper.inter;
 
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.f4blog.model.base.BaseMenu;
 import com.f4blog.model.base.BaseRole;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
 
-public interface MenuDao extends BaseMapper<BaseMenu> {
+public interface RoleDao extends BaseMapper<BaseRole> {
     Page query(@Param("page") Page page, String name);
 
-    List<Map> getAll(String name,String exclude_id);
+    List<Map> getAll(String name, String exclude_id);
 
-    List<BaseMenu> getLikeParentIds(Integer id);
+    List<BaseRole> getLikeParentIds(Integer id);
 
-    List<String> getMenuIdByRoleId(String roleId);
+    List<Integer> getRoleIdByUserId(Integer userId);
+
+    List<String> getRoleNameByUserId(Integer userId);
+
 }
